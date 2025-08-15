@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Savings Illustrator</title>
+    <title>Savings + Protection Illustrator</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js for charts -->
@@ -176,7 +176,7 @@
 <body class="p-4 sm:p-6 lg:p-8">
 
     <div class="max-w-7xl mx-auto space-y-8">
-        <h1 class="text-4xl font-bold text-center text-slate-800">Savings Illustrator</h1>
+        <h1 class="text-4xl font-bold text-center text-slate-800">Savings + Protection Illustrator</h1>
 
         <!-- Inputs -->
         <div class="card">
@@ -315,7 +315,7 @@
                         <i data-lucide="dollar-sign" class="w-6 h-6"></i>
                     </div>
                     <p class="font-semibold text-slate-800 text-sm mb-1">Short Saving Term</p>
-                    <p class="text-xs text-slate-500">Save for a short period to enjoy a longer policy term.</p>
+                    <p class="text-xs text-slate-500">Save for only ${paymentTerm} years to enjoy a total policy period of ${policyPeriod} years.</p>
                 </div>
                 <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
                      <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
@@ -1098,7 +1098,23 @@
             if (lineChartInstance) {
                 lineChartInstance.destroy();
             }
-            
+
+            // Dynamically calculate the suggested max for the Y-axis
+            const allValues = [
+                ...growthData.guaranteedPayoutValues,
+                ...growthData.projectedPayoutValues,
+                ...growthData.totalPremiumValues,
+                ...growthData.protectionValues
+            ];
+            const maxVal = Math.max(...allValues);
+            const suggestedMax = maxVal * 1.15; // Add a 15% buffer to the top
+
+            // Create a dedicated dataset for the final label
+            const projectedLabelData = Array(growthData.projectedPayoutValues.length).fill(null);
+            if (growthData.projectedPayoutValues.length > 0) {
+                projectedLabelData[growthData.projectedPayoutValues.length - 1] = growthData.projectedPayoutValues[growthData.projectedPayoutValues.length - 1];
+            }
+
             const data = {
                 labels: growthData.labels,
                 datasets: [
@@ -1149,6 +1165,26 @@
                         order: 3,
                         yAxisID: 'y',
                     },
+                    // NEW: Dedicated dataset for the final label
+                    {
+                        label: 'Final Payout',
+                        data: projectedLabelData,
+                        borderColor: 'transparent',
+                        backgroundColor: 'transparent',
+                        pointRadius: 0,
+                        fill: false,
+                        showLine: false,
+                        datalabels: {
+                            color: '#16a34a',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: function(value) {
+                                return formatCurrency(value);
+                            }
+                        }
+                    }
                 ]
             };
 
@@ -1191,6 +1227,7 @@
                             }
                         },
                         datalabels: {
+                            // This is the main datalabels configuration for all datasets
                             align: 'end',
                             anchor: 'end',
                             offset: 8,
@@ -1202,25 +1239,27 @@
                                 weight: 'bold'
                             },
                             formatter: function(value, context) {
+                                // Only show labels for specific datasets and points
                                 const data = context.dataset.data;
-                                if (!data || data.length === 0) return null; // Defensive check
+                                if (!data || data.length === 0) return null;
 
-                                const max_value = Math.max(...data);
-                                const first_max_index = data.indexOf(max_value);
-                                
-                                const isFirstMaxPoint = context.dataIndex === first_max_index;
                                 const isFinalPoint = context.dataIndex === context.dataset.data.length - 1;
-
-                                if ((context.dataset.label === 'Total Projected Payout' || context.dataset.label === 'Total Guaranteed Payout') && isFinalPoint) {
+                                
+                                // Show label for the final point on guaranteed and projected lines
+                                const isProjectedOrGuaranteed = context.dataset.label === 'Total Projected Payout' || context.dataset.label === 'Total Guaranteed Payout';
+                                if (isProjectedOrGuaranteed && isFinalPoint) {
                                      return formatCurrency(value);
                                 }
-                                if (context.dataset.label === 'Protection Payout' && isFirstMaxPoint) {
-                                    return formatCurrency(value);
+
+                                // Show label for the max point on the savings line
+                                if (context.dataset.label === 'Total Savings') {
+                                    const max_value = Math.max(...data);
+                                    const first_max_index = data.indexOf(max_value);
+                                    if (context.dataIndex === first_max_index) {
+                                        return formatCurrency(value);
+                                    }
                                 }
-                                if (context.dataset.label === 'Total Savings' && isFirstMaxPoint) {
-                                    return formatCurrency(value);
-                                }
-                                
+
                                 return null;
                             }
                         }
@@ -1232,7 +1271,9 @@
                             position: 'left',
                             beginAtZero: true,
                             ticks: { color: '#475569', callback: value => formatCurrency(value) },
-                            grid: { color: '#e2e8f0' }
+                            grid: { color: '#e2e8f0' },
+                            // FIX: Added a suggestedMax to the y-axis to provide top padding
+                            suggestedMax: suggestedMax
                         },
                         x: {
                             ticks: { color: '#475569' },
