@@ -171,6 +171,89 @@
                 gap: 0.5rem;
             }
         }
+
+        /* Carousel specific styles */
+        .benefits-carousel {
+            position: relative;
+            overflow: hidden;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+        .carousel-slide {
+            flex-shrink: 0;
+            width: 100%;
+        }
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .carousel-button-left {
+            left: 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .carousel-button-right {
+            right: 0;
+            border-radius: 0.5rem 0 0 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .carousel-slide {
+                width: 50%;
+            }
+        }
+        @media (min-width: 1024px) {
+            .carousel-slide {
+                width: 25%;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background-color: #fff;
+                color: #000;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+            /* Show all tab content when printing */
+            #detailsSection .hidden {
+                display: block !important;
+            }
+            /* Hide UI controls and nav tabs */
+            .btn-primary, .btn-secondary, nav, #editModal, .modal-backdrop, .benefits-carousel .carousel-button {
+                display: none !important;
+            }
+            #benefitsSection .benefits-carousel {
+                overflow: visible; /* Prevent overflow being hidden for print */
+                height: auto;
+            }
+            #benefitsSection .carousel-track {
+                transform: translateX(0) !important; /* Ensure all slides are visible */
+                flex-wrap: wrap; /* Wrap slides for printing */
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            #benefitsSection .carousel-slide {
+                width: auto;
+            }
+
+            /* Adjust chart for printing */
+            #chartContent {
+                 height: 400px; /* Force a consistent height */
+            }
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 lg:p-8">
@@ -178,76 +261,92 @@
     <div class="max-w-7xl mx-auto space-y-8">
         <h1 class="text-4xl font-bold text-center text-slate-800">Savings + Protection Illustrator</h1>
 
-        <!-- Inputs -->
+        <!-- 1. Client & Product Details (no change) -->
         <div class="card">
             <h2 class="section-title">Client & Product Details</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Goal Selector -->
-                <div class="lg:col-span-4">
-                    <label for="savingsGoal" class="block text-sm font-medium text-slate-600">Primary Savings Goal</label>
-                    <select id="savingsGoal" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                        <option value="education">Education Fund (for a child)</option>
-                        <option value="retirement">Retirement Plan (for self)</option>
-                        <option value="legacy">Legacy</option>
-                    </select>
-                </div>
+            <div class="space-y-6">
+                <!-- Personal Information -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">Your Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                         <!-- Name Input -->
+                        <div class="lg:col-span-4">
+                            <label for="clientName" class="block text-sm font-medium text-slate-600">Client's Name</label>
+                            <input type="text" id="clientName" placeholder="e.g. John Doe" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                        </div>
+                        <!-- Goal Selector -->
+                        <div class="lg:col-span-4">
+                            <label for="savingsGoal" class="block text-sm font-medium text-slate-600">Primary Savings Goal</label>
+                            <select id="savingsGoal" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                                <option value="education">Education Fund (for a child)</option>
+                                <option value="retirement">Retirement Plan (for self)</option>
+                                <option value="legacy">Legacy</option>
+                            </select>
+                        </div>
 
-                <!-- Age Inputs -->
-                <div id="ageInputs" class="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div>
-                        <label for="clientAge" class="block text-sm font-medium text-slate-600">Client's Current Age</label>
-                        <input type="number" id="clientAge" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
+                        <!-- Age Inputs -->
+                        <div id="ageInputs" class="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div>
+                                <label for="clientAge" class="block text-sm font-medium text-slate-600">Client's Current Age</label>
+                                <input type="number" id="clientAge" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                            </div>
+                            <div id="parentAgeWrapper" class="hidden">
+                                <label for="parentAge" class="block text-sm font-medium text-slate-600">Parent's Current Age</label>
+                                <input type="number" id="parentAge" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                            </div>
+                        </div>
                     </div>
-                    <div id="parentAgeWrapper" class="hidden">
-                         <label for="parentAge" class="block text-sm font-medium text-slate-600">Parent's Current Age</label>
-                         <input type="number" id="parentAge" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                    </div>
                 </div>
 
-
-                <!-- Financial Inputs -->
-                <div>
-                    <label for="annualPremium" class="block text-sm font-medium text-slate-600">Annual Saving (RM)</label>
-                    <input type="number" id="annualPremium" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                </div>
-                <div>
-                    <label for="paymentTerm" class="block text-sm font-medium text-slate-600">Saving Term (years)</label>
-                    <input type="number" id="paymentTerm" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md" value="10">
-                </div>
-                <div>
-                    <label for="annualGuaranteedPayout" class="block text-sm font-medium text-slate-600">Annual Payout (RM)</label>
-                    <input type="number" id="annualGuaranteedPayout" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                </div>
-                <div>
-                    <label for="policyPeriod" class="block text-sm font-medium text-slate-600">Total Policy Period (years)</label>
-                    <input type="number" id="policyPeriod" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md" value="20">
-                </div>
-                <div>
-                    <label for="interestRate" class="block text-sm font-medium text-slate-600">Interest Rate (%)</label>
-                    <input type="number" id="interestRate" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md" value="4.8">
-                </div>
-                <div>
-                    <label for="maturityValue" class="block text-sm font-medium text-slate-600">Guaranteed Maturity Payout (b)</label>
-                    <input type="number" id="maturityValue" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                </div>
-                <div>
-                    <label for="nonGuaranteedValue" class="block text-sm font-medium text-slate-600">Non-Guaranteed Cash Value (c)</label>
-                    <input type="number" id="nonGuaranteedValue" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                </div>
-                
-                 <!-- Protection Inputs -->
-                <div>
-                    <label for="deathPayoutEarly" class="block text-sm font-medium text-slate-600">Sum Assured (Yrs 1-5)</label>
-                    <input type="number" id="deathPayoutEarly" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                </div>
-                 <div>
-                    <label for="deathPayoutLate" class="block text-sm font-medium text-slate-600">Sum Assured (Yrs 6+)</label>
-                    <input type="number" id="deathPayoutLate" class="w-full mt-1 p-2 bg-slate-50 border border-slate-300 rounded-md">
-                </div>
-                 <div class="flex items-end justify-start">
-                    <div class="flex items-center">
-                        <input id="juvenilePolicy" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <label for="juvenilePolicy" class="ml-2 block text-sm text-slate-600">This is a Juvenile Policy</label>
+                <!-- Policy Parameters -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">Policy Parameters</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Financial Inputs -->
+                        <div>
+                            <label for="annualPremium" class="block text-sm font-medium text-slate-600">Annual Saving (RM)</label>
+                            <input type="number" id="annualPremium" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                        </div>
+                        <div>
+                            <label for="paymentTerm" class="block text-sm font-medium text-slate-600">Saving Term (years)</label>
+                            <input type="number" id="paymentTerm" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md" value="10">
+                        </div>
+                        <div>
+                            <label for="annualGuaranteedPayout" class="block text-sm font-medium text-slate-600">Annual Payout (RM)</label>
+                            <input type="number" id="annualGuaranteedPayout" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                        </div>
+                        <div>
+                            <label for="policyPeriod" class="block text-sm font-medium text-slate-600">Total Policy Period (years)</label>
+                            <input type="number" id="policyPeriod" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md" value="20">
+                        </div>
+                        <div>
+                            <label for="interestRate" class="block text-sm font-medium text-slate-600">Interest Rate (%)</label>
+                            <input type="number" id="interestRate" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md" value="4.8">
+                        </div>
+                        <div>
+                            <label for="maturityValue" class="block text-sm font-medium text-slate-600">Guaranteed Maturity Payout (b)</label>
+                            <input type="number" id="maturityValue" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                        </div>
+                        <div>
+                            <label for="nonGuaranteedValue" class="block text-sm font-medium text-slate-600">Non-Guaranteed Cash Value (c)</label>
+                            <input type="number" id="nonGuaranteedValue" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                        </div>
+                        
+                        <!-- Protection Inputs -->
+                        <div>
+                            <label for="deathPayoutEarly" class="block text-sm font-medium text-slate-600">Sum Assured (Yrs 1-5)</label>
+                            <input type="number" id="deathPayoutEarly" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                        </div>
+                        <div>
+                            <label for="deathPayoutLate" class="block text-sm font-medium text-slate-600">Sum Assured (Yrs 6+)</label>
+                            <input type="number" id="deathPayoutLate" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
+                        </div>
+                        <div class="flex items-end justify-start">
+                            <div class="flex items-center">
+                                <input id="juvenilePolicy" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="juvenilePolicy" class="ml-2 block text-sm text-slate-600">This is a Juvenile Policy</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -260,17 +359,37 @@
              </div>
         </div>
         
-        <!-- Consolidated Summary & Protection -->
+        <!-- 2. Overall Summary -->
         <div id="summaryCard" class="card">
             <h2 class="section-title">Overall Summary</h2>
 
-            <!-- New: Dynamic Goal Statement -->
+            <!-- Key Milestones (timeline) -->
+            <div id="timelineContainer" class="mb-24 pt-4">
+                <p class="text-lg font-semibold text-slate-700 text-center mb-4">Key Milestones</p>
+                <div class="relative w-3/4 mx-auto h-2 bg-slate-200 rounded-full">
+                    <div id="paymentProgressBar" class="absolute h-2 bg-blue-500 rounded-full"></div>
+                    <div id="startMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2">
+                        <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow"></div>
+                        <div id="startLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 0<br>Start</div>
+                    </div>
+                    <div id="paymentEndMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2">
+                        <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow"></div>
+                        <div id="paymentEndLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 10<br>Saving Term Ends</div>
+                    </div>
+                    <div id="maturityMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2" style="right: 0;">
+                        <div class="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow"></div>
+                        <div id="maturityLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 20<br>Maturity</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your retirement fund goal: ... -->
             <div id="goalStatement" class="text-center bg-gray-50 border border-gray-200 rounded-lg p-4 mb-8">
                 <p class="text-sm font-medium text-slate-600 mb-1">Your savings goal:</p>
                 <p class="text-2xl font-bold text-slate-800">Please enter values and click "Calculate"</p>
             </div>
             
-            <!-- New: Summary boxes for key metrics -->
+            <!-- Annual Saving | Saving Terms (years) | Total Saving ..... -->
             <div id="clientSummary" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
                 <div class="summary-box">
                     <p class="summary-box-label">Annual Saving</p>
@@ -293,111 +412,9 @@
                      <p class="summary-box-value">RM 0</p>
                 </div>
             </div>
-            
-            <!-- New: Benefits Section with Icons -->
-            <div id="benefitsSection" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-                 <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                     <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                        <i data-lucide="wallet" class="w-6 h-6"></i>
-                    </div>
-                    <p class="font-semibold text-slate-800 text-sm mb-1">Guaranteed Payouts</p>
-                    <p class="text-xs text-slate-500">Receive annual guaranteed payouts from Year 1 to maturity.</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                     <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>
-                    </div>
-                    <p class="font-semibold text-slate-800 text-sm mb-1">Financial Safety Net</p>
-                    <p class="text-xs text-slate-500">Combines savings and protection for a secure financial future.</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                     <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                        <i data-lucide="dollar-sign" class="w-6 h-6"></i>
-                    </div>
-                    <p class="font-semibold text-slate-800 text-sm mb-1">Short Saving Term</p>
-                    <p class="text-xs text-slate-500">Save for only ${paymentTerm} years to enjoy a total policy period of ${policyPeriod} years.</p>
-                </div>
-                <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                     <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                        <i data-lucide="heart-pulse" class="w-6 h-6"></i>
-                    </div>
-                    <p class="font-semibold text-slate-800 text-sm mb-1">Waiver Benefits</p>
-                    <p class="text-xs text-slate-500">Future savings are waived in case of TPD or critical illness.</p>
-                </div>
-            </div>
-
-            <!-- Visual Timeline -->
-            <div id="timelineContainer" class="mb-24 pt-4">
-                <p class="text-lg font-semibold text-slate-700 text-center mb-4">Key Milestones</p>
-                <div class="relative w-3/4 mx-auto h-2 bg-slate-200 rounded-full">
-                    <div id="paymentProgressBar" class="absolute h-2 bg-blue-500 rounded-full"></div>
-                    <div id="startMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2">
-                        <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow"></div>
-                        <div id="startLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 0<br>Start</div>
-                    </div>
-                    <div id="paymentEndMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2">
-                        <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow"></div>
-                        <div id="paymentEndLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 10<br>Saving Term Ends</div>
-                    </div>
-                    <div id="maturityMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2" style="right: 0;">
-                        <div class="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow"></div>
-                        <div id="maturityLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 20<br>Maturity</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
-                <!-- Column 1: Guaranteed -->
-                <div class="flex flex-col space-y-4 p-6 rounded-lg border border-blue-300 bg-blue-50">
-                    <h3 class="text-lg font-semibold text-blue-800">Guaranteed Returns at Maturity</h3>
-                    <div class="flex-grow space-y-2">
-                        <div class="flex justify-between items-baseline">
-                            <p class="text-sm text-blue-700">Accumulated Payouts (a)</p>
-                            <p id="totalAccumulatedGuaranteedPayout" class="text-xl font-semibold text-blue-800">RM 0</p>
-                        </div>
-                        <div class="flex justify-between items-baseline">
-                            <p class="text-sm text-blue-700">Maturity Payout (b)</p>
-                            <p id="guaranteedMaturity" class="text-xl font-semibold text-blue-800">RM 0</p>
-                        </div>
-                    </div>
-                    <div class="text-blue-800 pt-4 border-t border-blue-200 highlighted-blue">
-                        <p class="text-md font-medium">Total Guaranteed Payout (a+b)</p>
-                        <p id="totalGuaranteedPayout" class="text-4xl font-bold">RM 0</p>
-                    </div>
-                </div>
-                <!-- Column 2: Potential Equation -->
-                <div class="flex flex-col space-y-4 p-6 rounded-lg border border-green-300 bg-green-50">
-                     <h3 class="text-lg font-semibold text-green-800">Projected Returns at Maturity</h3>
-                     <div class="flex-grow space-y-2">
-                        <div class="flex justify-between items-baseline">
-                            <p class="text-sm text-slate-500">Total Guaranteed Payout (a+b)</p>
-                            <p id="guaranteedForEquation" class="text-xl font-semibold text-slate-700">RM 0</p>
-                        </div>
-                         <div class="flex justify-between items-baseline">
-                            <p class="text-sm text-green-700">+ Non-Guaranteed Cash Value (c)</p>
-                            <p id="cashValue" class="text-xl font-semibold text-green-800">RM 0</p>
-                        </div>
-                    </div>
-                     <div class="text-green-800 pt-4 border-t border-green-200 highlighted-green">
-                        <p class="text-md font-medium">Total Projected Payout (a+b+c)</p>
-                        <p id="totalProjectedPayout" class="text-4xl font-bold">RM 0</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Bottom Section: Net Result -->
-            <div class="mt-6 pt-6 border-t border-slate-200 grid md:grid-cols-2 gap-8">
-                <div>
-                    <p id="totalPremiumsLabel" class="text-sm text-slate-500">Total Savings</p>
-                    <p id="totalPremiums" class="text-3xl font-semibold text-slate-700">RM 0</p>
-                </div>
-                <div class="text-green-600">
-                    <p class="text-sm">Projected Growth</p>
-                    <p id="totalGrowth" class="text-3xl font-bold">RM 0</p>
-                </div>
-            </div>
         </div>
 
-        <!-- Details with Tabs -->
+        <!-- 3. The payout table / growth chart / protection details -->
         <div id="detailsSection" class="card">
             <div class="border-b border-slate-200 mb-4">
                 <nav class="flex space-x-4" aria-label="Tabs">
@@ -417,14 +434,13 @@
                             <thead class="table-header sticky top-0">
                                 <tr>
                                     <th class="p-3 font-semibold text-center w-1/12">Year</th>
-                                    <th class="p-3 font-semibold text-right w-2/12">Annual Saving</th>
-                                    <th class="p-3 font-semibold text-right w-1/12">%</th>
-                                    <th class="p-3 font-semibold text-right w-3/12">Annual Payout/ Saving</th>
-                                    <th class="p-3 text-right font-semibold w-5/12">Total Saving + Interest (<span id="interestRateHeader">0.0</span>% p.a.)</th>
+                                    <th class="p-3 font-semibold text-right w-3/12">Annual Saving</th>
+                                    <th class="p-3 font-semibold text-right w-4/12">Guaranteed Annual Payout (RM)</th>
+                                    <th class="p-3 text-right font-semibold w-4/12">Payouts Left to Grow (<span id="interestRateHeader">0.0</span>% p.a.)</th>
                                 </tr>
                             </thead>
                             <tbody id="savingsTableBody">
-                                <tr><td colspan="5" class="text-center p-4 text-slate-500">Please enter values and click "Calculate" to see the table.</td></tr>
+                                <tr><td colspan="4" class="text-center p-4 text-slate-500">Please enter values and click "Calculate" to see the table.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -452,6 +468,109 @@
                 </div>
             </div>
         </div>
+        
+        <!-- 4. Final Payouts & Performance -->
+        <div class="card mt-8">
+            <h2 class="section-title">Final Payouts & Performance</h2>
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+                <!-- Column 1: Guaranteed -->
+                <div class="flex flex-col space-y-4 p-6 rounded-lg border border-blue-300 bg-blue-50">
+                    <h3 class="text-lg font-semibold text-blue-800">Total Payout</h3>
+                    <div class="flex-grow space-y-2">
+                        <div class="flex justify-between items-baseline">
+                            <p class="text-sm text-blue-700">Accumulated Payouts (a)</p>
+                            <p id="totalAccumulatedGuaranteedPayout" class="text-xl font-semibold text-blue-800">RM 0</p>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <p class="text-sm text-blue-700">Maturity Payout (b)</p>
+                            <p id="guaranteedMaturity" class="text-xl font-semibold text-blue-800">RM 0</p>
+                        </div>
+                    </div>
+                    <div class="text-blue-800 pt-4 border-t border-blue-200 highlighted-blue">
+                        <p class="text-md font-medium">Total Guaranteed Payout (a+b)</p>
+                        <p id="totalGuaranteedPayout" class="text-4xl font-bold">RM 0</p>
+                    </div>
+                </div>
+                <!-- Column 2: Projected & Growth -->
+                <div class="flex flex-col space-y-4 p-6 rounded-lg border border-green-300 bg-green-50">
+                     <h3 class="text-lg font-semibold text-green-800">Projected Total Payout</h3>
+                     <div class="flex-grow space-y-2">
+                        <div class="flex justify-between items-baseline">
+                            <!-- ADDED: text-blue-800 class for visual association -->
+                            <p class="text-sm text-blue-800">Total Guaranteed Payout (a+b)</p>
+                            <p id="guaranteedForEquation" class="text-xl font-semibold text-blue-800">RM 0</p>
+                        </div>
+                         <div class="flex justify-between items-baseline">
+                            <p class="text-sm text-green-700">+ Non-Guaranteed Cash Value (c)</p>
+                            <p id="cashValue" class="text-xl font-semibold text-green-800">RM 0</p>
+                        </div>
+                    </div>
+                     <div class="text-green-800 pt-4 border-t border-green-200 highlighted-green">
+                        <p class="text-md font-medium">Total Projected Payout (a+b+c)</p>
+                        <p id="totalProjectedPayout" class="text-4xl font-bold">RM 0</p>
+                    </div>
+                </div>
+            </div>
+             <!-- Moved Total Savings & Projected Growth to this section -->
+            <div class="mt-6 pt-6 border-t border-slate-200 grid md:grid-cols-2 gap-8">
+                <div>
+                    <p id="totalPremiumsLabel" class="text-sm text-slate-500">Total Savings</p>
+                    <p id="totalPremiums" class="text-3xl font-semibold text-slate-700">RM 0</p>
+                </div>
+                <div class="text-green-600">
+                    <p class="text-sm">Projected Growth</p>
+                    <p id="totalGrowth" class="text-3xl font-bold">RM 0</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 5. Key benefits -->
+        <div id="benefitsSection" class="card mt-8">
+            <h2 class="section-title">Key Benefits</h2>
+            <div class="benefits-carousel relative w-full overflow-hidden">
+                <div class="carousel-track flex">
+                     <div class="carousel-slide px-2">
+                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
+                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
+                                <i data-lucide="wallet" class="w-6 h-6"></i>
+                            </div>
+                            <p class="font-semibold text-slate-800 text-sm mb-1">Guaranteed Payouts</p>
+                            <p class="text-xs text-slate-500">Receive annual payouts from year 1 to maturity.</p>
+                        </div>
+                     </div>
+                     <div class="carousel-slide px-2">
+                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
+                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
+                                <i data-lucide="shield-check" class="w-6 h-6"></i>
+                            </div>
+                            <p class="font-semibold text-slate-800 text-sm mb-1">Financial Safety Net</p>
+                            <p class="text-xs text-slate-500">Combining savings and protection for a secure financial future.</p>
+                        </div>
+                     </div>
+                     <div class="carousel-slide px-2">
+                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
+                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
+                                <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                            </div>
+                            <p class="font-semibold text-slate-800 text-sm mb-1">Short Saving Term</p>
+                            <p class="text-xs text-slate-500">Save for a short period, then enjoy a longer policy term.</p>
+                        </div>
+                     </div>
+                     <div class="carousel-slide px-2">
+                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
+                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
+                                <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+                            </div>
+                            <p class="font-semibold text-slate-800 text-sm mb-1">Waiver Benefits</p>
+                            <p class="text-xs text-slate-500">Future savings are waived in case of total permanent disability.</p>
+                        </div>
+                     </div>
+                </div>
+                <button id="carousel-btn-left" class="carousel-button carousel-button-left px-2 py-4"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+                <button id="carousel-btn-right" class="carousel-button carousel-button-right px-2 py-4"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+            </div>
+        </div>
+
         <div class="flex justify-center mt-8">
             <button id="generatePdfBtn" class="btn-secondary hidden">Generate Report (PDF)</button>
         </div>
@@ -462,13 +581,10 @@
         <div class="modal-content text-center">
             <h3 id="modalTitle" class="text-xl font-bold mb-4">Edit Year 1 Guaranteed Payout</h3>
              <div class="mb-4">
-                 <label for="modalSavingsInput" class="block text-sm font-medium text-slate-600 text-left">Annual Payout/ Saving (RM)</label>
+                 <label for="modalSavingsInput" class="block text-sm font-medium text-slate-600 text-left">Guaranteed Annual Payout (RM)</label>
                  <input type="number" id="modalSavingsInput" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-md text-center text-2xl">
             </div>
-            <div class="mb-6">
-                <label for="modalPercentageInput" class="block text-sm font-medium text-slate-600 text-left">Percentage (%)</label>
-                <input type="number" id="modalPercentageInput" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-md text-center text-2xl" value="3">
-            </div>
+            <!-- Removed the percentage input block -->
             <div class="flex items-center justify-center mb-6">
                 <input id="applyToFollowing" type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-600">
                 <label for="applyToFollowing" class="ml-2 block text-sm text-slate-600">Apply to the following years</label>
@@ -502,6 +618,7 @@
         const nonGuaranteedValueInput = document.getElementById('nonGuaranteedValue');
         const deathPayoutEarlyInput = document.getElementById('deathPayoutEarly');
         const deathPayoutLateInput = document.getElementById('deathPayoutLate');
+        const clientNameInput = document.getElementById('clientName'); // NEW: Added client name input
         
         const savingsTableBody = document.getElementById('savingsTableBody');
         const summaryCard = document.getElementById('summaryCard');
@@ -543,10 +660,16 @@
         const editModal = document.getElementById('editModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalSavingsInput = document.getElementById('modalSavingsInput');
-        const modalPercentageInput = document.getElementById('modalPercentageInput');
+        // Removed the modalPercentageInput variable
         const applyToFollowingCheckbox = document.getElementById('applyToFollowing');
         const saveModalBtn = document.getElementById('saveModalBtn');
         const cancelBtn = document.getElementById('cancelBtn');
+
+        // Carousel Elements
+        const carouselTrack = document.querySelector('.carousel-track');
+        const carouselBtnLeft = document.getElementById('carousel-btn-left');
+        const carouselBtnRight = document.getElementById('carousel-btn-right');
+        let currentSlide = 0;
 
         // App state
         let guaranteedPayoutsData = [];
@@ -570,6 +693,18 @@
         tabChartBtn.addEventListener('click', () => switchTab('chart'));
         tabTableBtn.addEventListener('click', () => switchTab('table'));
         tabProtectionBtn.addEventListener('click', () => switchTab('protection'));
+        tabReport.addEventListener('click', () => {
+             // Temporarily show all tab content for printing
+             tableContent.classList.remove('hidden');
+             chartContent.classList.remove('hidden');
+             protectionContent.classList.remove('hidden');
+             
+             // The print dialog will handle the rest
+             window.print();
+             
+             // After printing, revert to the initial state
+             switchTab('table');
+        });
         savingsGoalSelect.addEventListener('change', () => {
             if (savingsGoalSelect.value === 'education') {
                 parentAgeWrapper.classList.remove('hidden');
@@ -585,6 +720,7 @@
             renderTable([]);
             renderSummary(0,0,0,0,0,0,10,savingsGoalSelect.value,0,0);
             renderBenefitsSection(10,20,'education');
+            renderClientSummary(0,0,0,0,0,0);
             renderLineChart({
                 labels: [],
                 projectedPayoutValues: [],
@@ -595,6 +731,7 @@
             });
             updateProtectionNarrative();
             updateTimeline();
+            setupCarousel();
         });
         document.getElementById('startMilestone').addEventListener('click', () => {
             switchTab('protection');
@@ -618,6 +755,45 @@
             }
         });
 
+        // --- Carousel functions ---
+        function setupCarousel() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const totalSlides = slides.length;
+            
+            function updateCarousel() {
+                const carouselContainer = document.querySelector('.benefits-carousel');
+                const slideWidth = slides[0].offsetWidth;
+                const visibleSlides = window.innerWidth >= 1024 ? 4 : (window.innerWidth >= 768 ? 2 : 1);
+                const maxTransform = (totalSlides - visibleSlides) * slideWidth;
+                const newTransform = -currentSlide * slideWidth;
+                carouselTrack.style.transform = `translateX(${newTransform}px)`;
+
+                // Hide/show buttons based on slide position
+                carouselBtnLeft.classList.toggle('invisible', currentSlide === 0);
+                carouselBtnRight.classList.toggle('invisible', currentSlide >= totalSlides - visibleSlides);
+            }
+            
+            carouselBtnLeft.addEventListener('click', () => {
+                currentSlide = Math.max(0, currentSlide - 1);
+                updateCarousel();
+            });
+
+            carouselBtnRight.addEventListener('click', () => {
+                const visibleSlides = window.innerWidth >= 1024 ? 4 : (window.innerWidth >= 768 ? 2 : 1);
+                currentSlide = Math.min(totalSlides - visibleSlides, currentSlide + 1);
+                updateCarousel();
+            });
+            
+            window.addEventListener('resize', () => {
+                 currentSlide = 0;
+                 updateCarousel();
+            });
+            
+            // Initial call to set up the carousel
+            updateCarousel();
+        }
+
+
         // Initialize default empty values for inputs
         function initializeDefaultValues() {
             clientAgeInput.value = '';
@@ -633,7 +809,8 @@
         function runInitialCalculation() {
             policyPeriod = parseInt(policyPeriodInput.value);
             const initialGuaranteedPayout = parseFloat(annualGuaranteedPayoutInput.value);
-            const initialPercentage = parseFloat(modalPercentageInput.value);
+            // Removed the initialPercentage variable
+            const initialPercentage = 0; // Set a default value to avoid errors
 
             // Added check to ensure valid numeric inputs before proceeding
             if (isNaN(policyPeriod) || isNaN(initialGuaranteedPayout) || isNaN(initialPercentage) || policyPeriod <= 0) {
@@ -979,10 +1156,9 @@
                     
                      tr.innerHTML = `
                          <td class="p-3 text-center w-1/12">${row.year}</td>
-                         <td class="p-3 text-right w-2/12">${premiumCellContent}</td>
-                         <td class="p-3 text-right w-1/12">${(row.percentage || 0).toFixed(0)}%</td>
-                         <td class="p-3 text-right w-3/12">${formatCurrency(row.annualPayout || 0)}</td>
-                         <td class="p-3 text-right w-5/12">${formatCurrency(row.total || 0)}</td>
+                         <td class="p-3 text-right w-3/12">${premiumCellContent}</td>
+                         <td class="p-3 text-right w-4/12">${formatCurrency(row.annualPayout || 0)}</td>
+                         <td class="p-3 text-right w-4/12">${formatCurrency(row.total || 0)}</td>
                      `;
                      tr.addEventListener('click', () => openEditModal(row.year));
                      tr.addEventListener('mouseover', () => highlightChartPoint(index));
@@ -990,7 +1166,7 @@
                      savingsTableBody.appendChild(tr);
                  });
             } else {
-                 savingsTableBody.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-slate-500">Please enter values and click "Calculate" to see the table.</td></tr>';
+                 savingsTableBody.innerHTML = '<tr><td colspan="4" class="text-center p-4 text-slate-500">Please enter values and click "Calculate" to see the table.</td></tr>';
             }
         }
         
@@ -1027,71 +1203,38 @@
             totalPremiumsLabel.textContent = `Total Savings (${paymentTerm} years)`;
             totalGrowthEl.innerHTML = `${formatCurrency(totalGrowth)} <span class="text-xl">(${growthPercentage.toFixed(1)}%)</span>`;
 
-            // Update new goal statement based on inputs
+            // NEW: Updated goal statement to be dynamic and personalized
+            const clientName = clientNameInput.value.trim();
+            const clientNameText = clientName ? clientName + "'s" : "Your";
             let goalText = '';
+            let goalTitle = '';
+
             switch(goal) {
                 case 'education':
-                    goalText = `
-                        <p class="text-sm font-medium text-slate-600 mb-1">Your child's education fund goal:</p>
-                        <p class="text-2xl font-bold text-slate-800">Reaching ${formatCurrency(finalProjectedPayout)} by Age ${clientAge + policyPeriod}</p>
-                    `;
+                    goalTitle = `child's education fund goal:`;
+                    goalText = `Reaching ${formatCurrency(finalProjectedPayout)} by Age ${clientAge + policyPeriod}`;
                     break;
                 case 'retirement':
-                    goalText = `
-                        <p class="text-sm font-medium text-slate-600 mb-1">Your retirement fund goal:</p>
-                        <p class="text-2xl font-bold text-slate-800">Reaching ${formatCurrency(finalProjectedPayout)} by Age ${clientAge + policyPeriod}</p>
-                    `;
+                    goalTitle = `retirement fund goal:`;
+                    goalText = `Reaching ${formatCurrency(finalProjectedPayout)} by Age ${clientAge + policyPeriod}`;
                     break;
                 case 'legacy':
-                    goalText = `
-                        <p class="text-sm font-medium text-slate-600 mb-1">Your legacy fund goal:</p>
-                        <p class="text-2xl font-bold text-slate-800">Providing ${formatCurrency(finalProjectedPayout)} to your loved ones</p>
-                    `;
+                    goalTitle = `legacy fund goal:`;
+                    goalText = `Providing ${formatCurrency(finalProjectedPayout)} to your loved ones`;
                     break;
+                default:
+                    goalTitle = 'savings goal:';
+                    goalText = 'Please enter values and click "Calculate"';
             }
-            goalStatementEl.innerHTML = goalText;
+            goalStatementEl.innerHTML = `
+                <p class="text-sm font-medium text-slate-600 mb-1">${clientNameText} ${goalTitle}</p>
+                <p class="text-2xl font-bold text-slate-800">${goalText}</p>
+            `;
         }
 
         // New function to render the benefits section with icons
         function renderBenefitsSection(paymentTerm, policyPeriod, goal) {
-            benefitsSection.innerHTML = ''; // Clear existing content
-            const benefitItems = [
-                {
-                    icon: 'wallet',
-                    title: 'Guaranteed Payouts',
-                    description: 'Receive annual guaranteed payouts from Year 1 to maturity.'
-                },
-                {
-                    icon: 'shield-check',
-                    title: 'Financial Safety Net',
-                    description: 'Combines savings and protection for a secure financial future.'
-                },
-                {
-                    icon: 'dollar-sign',
-                    title: 'Short Saving Term',
-                    description: `Save for only ${paymentTerm} years to enjoy a total policy period of ${policyPeriod} years.`
-                },
-                {
-                    icon: 'heart-pulse',
-                    title: 'Waiver Benefits',
-                    description: 'Future savings are waived in case of TPD or critical illness.'
-                }
-            ];
-
-            benefitItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card';
-                div.innerHTML = `
-                    <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                        <i data-lucide="${item.icon}" class="w-6 h-6"></i>
-                    </div>
-                    <p class="font-semibold text-slate-800 text-sm mb-1">${item.title}</p>
-                    <p class="text-xs text-slate-500">${item.description}</p>
-                `;
-                benefitsSection.appendChild(div);
-            });
-            // Feather Icons requires a call to replace the tags with SVGs
-            lucide.createIcons();
+            // This function is no longer needed as the HTML is static, but we'll keep the carousel setup
         }
         
         function renderLineChart(growthData) {
@@ -1308,7 +1451,7 @@
             currentlyEditingYear = year;
             modalTitle.textContent = `Edit Year ${year} Guaranteed Payout`;
             modalSavingsInput.value = guaranteedPayoutsData[year - 1];
-            modalPercentageInput.value = percentageData[year - 1];
+            // Removed the percentage input block
             applyToFollowingCheckbox.checked = false;
             editModal.classList.remove('hidden');
         }
@@ -1320,13 +1463,15 @@
 
         function saveChanges() {
             const newGuaranteedPayout = parseFloat(modalSavingsInput.value);
-            const newPercentage = parseFloat(modalPercentageInput.value);
-            if (isNaN(newGuaranteedPayout) || isNaN(newPercentage) || currentlyEditingYear === -1) {
+            // Removed the line that reads the percentage input
+            if (isNaN(newGuaranteedPayout) || currentlyEditingYear === -1) {
                 return;
             }
 
             const yearIndex = currentlyEditingYear - 1;
             guaranteedPayoutsData[yearIndex] = newGuaranteedPayout;
+            // Removed the line that updates percentageData
+            const newPercentage = 0; // Keeping this variable defined to prevent errors
             percentageData[yearIndex] = newPercentage;
 
             if (applyToFollowingCheckbox.checked) {
