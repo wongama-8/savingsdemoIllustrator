@@ -11,8 +11,6 @@
     <!-- Chart.js Datalabels Plugin -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons for benefits section -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -41,7 +39,7 @@
             font-weight: 600;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            transition: background-color 0.3s;
+            transition: background-color: 0.3s;
         }
         .btn-primary:hover {
             background-color: #1d4ed8; /* Darker Blue */
@@ -52,7 +50,7 @@
             font-weight: 600;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            transition: background-color 0.3s;
+            transition: background-color: 0.3s;
         }
         .btn-secondary:hover {
             background-color: #cbd5e1;
@@ -142,79 +140,95 @@
             font-weight: 600; /* font-semibold */
             color: #1e293b; /* text-slate-800 */
         }
-        .highlighted-blue {
-            background-color: #eff6ff; /* Blue 50 */
-            border: 1px solid #bfdbfe; /* Blue 300 */
-            padding: 1rem;
-            border-radius: 0.5rem;
-        }
-        .highlighted-green {
-            background-color: #f0fdf4; /* Green 50 */
-            border: 1px solid #86efac; /* Green 300 */
-            padding: 1rem;
-            border-radius: 0.5rem;
-        }
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .milestone-point:hover {
-            cursor: pointer;
-            transform: scale(1.2);
-            transition: transform 0.2s ease-in-out;
-        }
-        /* New styles for responsive buttons */
-        @media (max-width: 1023px) {
-            .input-buttons {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
-            }
-        }
-
-        /* Carousel specific styles */
-        .benefits-carousel {
-            position: relative;
-            overflow: hidden;
-        }
-        .carousel-track {
+        .benefit-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
             display: flex;
-            transition: transform 0.3s ease-in-out;
+            gap: 1.5rem;
         }
-        .carousel-slide {
+        .benefit-card .icon-container {
             flex-shrink: 0;
-            width: 100%;
-        }
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
-            z-index: 10;
-        }
-        .carousel-button-left {
-            left: 0;
-            border-radius: 0 0.5rem 0.5rem 0;
-        }
-        .carousel-button-right {
-            right: 0;
-            border-radius: 0.5rem 0 0 0.5rem;
-        }
-        @media (min-width: 768px) {
-            .carousel-slide {
-                width: 50%;
-            }
-        }
-        @media (min-width: 1024px) {
-            .carousel-slide {
-                width: 25%;
-            }
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* --- NEW: Contribution & Payouts Timeline --- */
+        .contribution-timeline-wrapper {
+            width: 100%;
+            display: grid;
+            grid-template-rows: 30px 20px 30px;
+            gap: 8px; /* Creates vertical space */
+        }
+        .timeline-section {
+            position: relative;
+        }
+        .timeline-bar {
+            position: absolute;
+            height: 100%;
+            background-color: #3b82f6;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        .timeline-bar.receive-bar {
+            background-color: #22c55e;
+        }
+        .timeline-axis-wrapper {
+            width: 100%;
+            position: relative;
+        }
+        .timeline-axis {
+            width: 100%;
+            height: 2px;
+            background-color: #cbd5e1;
+            position: absolute;
+            top: 0;
+        }
+        .timeline-years {
+            display: flex;
+            justify-content: space-around;
+        }
+        .timeline-year {
+            flex: 1;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #64748b;
+            position: relative;
+            padding-top: 6px; /* Space for the tick mark */
+        }
+        .timeline-year::before {
+             content: '';
+             position: absolute;
+             top: -4px;
+             left: 50%;
+             transform: translateX(-50%);
+             width: 2px;
+             height: 8px; /* The height of the tick */
+             background-color: #cbd5e1;
+        }
+        .timeline-maturity-flag {
+            position: absolute;
+            top: -22px; /* Position above the axis */
+            right: 0;
+            transform: translateX(50%);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #ef4444;
+        }
+        
         /* Print styles */
         @media print {
             body {
@@ -226,32 +240,17 @@
                 border: 1px solid #ccc;
                 page-break-inside: avoid;
             }
-            /* Show all tab content when printing */
-            #detailsSection .hidden {
+            #detailsSection .hidden, #customizedBenefitsSection .hidden {
                 display: block !important;
             }
-            /* Hide UI controls and nav tabs */
-            .btn-primary, .btn-secondary, nav, #editModal, .modal-backdrop, .benefits-carousel .carousel-button {
+            .btn-primary, .btn-secondary, nav, #editModal, .modal-backdrop {
                 display: none !important;
             }
-            #benefitsSection .benefits-carousel {
-                overflow: visible; /* Prevent overflow being hidden for print */
-                height: auto;
+            #customizedBenefitsSection {
+                display: grid; grid-template-columns: 1fr; gap: 1rem;
             }
-            #benefitsSection .carousel-track {
-                transform: translateX(0) !important; /* Ensure all slides are visible */
-                flex-wrap: wrap; /* Wrap slides for printing */
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-            #benefitsSection .carousel-slide {
-                width: auto;
-            }
-
-            /* Adjust chart for printing */
             #chartContent {
-                 height: 400px; /* Force a consistent height */
+                 height: 400px;
             }
         }
     </style>
@@ -261,7 +260,7 @@
     <div class="max-w-7xl mx-auto space-y-8">
         <h1 class="text-4xl font-bold text-center text-slate-800">Savings + Protection Illustrator</h1>
 
-        <!-- 1. Client & Product Details (no change) -->
+        <!-- 1. Client & Product Details -->
         <div class="card">
             <h2 class="section-title">Client & Product Details</h2>
             <div class="space-y-6">
@@ -304,7 +303,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Financial Inputs -->
                         <div>
-                            <label for="annualPremium" class="block text-sm font-medium text-slate-600">Annual Saving (RM)</label>
+                            <label for="annualPremium" class="block text-sm font-medium text-slate-600">Yearly Saving (RM)</label>
                             <input type="number" id="annualPremium" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
                         </div>
                         <div>
@@ -328,7 +327,7 @@
                             <input type="number" id="maturityValue" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
                         </div>
                         <div>
-                            <label for="nonGuaranteedValue" class="block text-sm font-medium text-slate-600">Non-Guaranteed Cash Value (c)</label>
+                            <label for="nonGuaranteedValue" class="block text-sm font-medium text-slate-600">Maturity Bonus (c)</label>
                             <input type="number" id="nonGuaranteedValue" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-md">
                         </div>
                         
@@ -349,6 +348,25 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Riders & Waivers Section -->
+                 <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">Riders & Waivers</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="flex items-center">
+                            <input id="pruLegacyCheckbox" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="pruLegacyCheckbox" class="ml-2 block text-sm text-slate-600">PruLegacy</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="pruWaiverCheckbox" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="pruWaiverCheckbox" class="ml-2 block text-sm text-slate-600">PruWaiver</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="parentWaiverCheckbox" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="parentWaiverCheckbox" class="ml-2 block text-sm text-slate-600">Parent Waiver</label>
+                        </div>
+                    </div>
+                 </div>
             </div>
             
              <!-- Separated Save/Load/Calculate buttons for better hierarchy -->
@@ -363,65 +381,31 @@
         <div id="summaryCard" class="card">
             <h2 class="section-title">Overall Summary</h2>
 
-            <!-- Key Milestones (timeline) -->
-            <div id="timelineContainer" class="mb-24 pt-4">
-                <p class="text-lg font-semibold text-slate-700 text-center mb-4">Key Milestones</p>
-                <div class="relative w-3/4 mx-auto h-2 bg-slate-200 rounded-full">
-                    <div id="paymentProgressBar" class="absolute h-2 bg-blue-500 rounded-full"></div>
-                    <div id="startMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2">
-                        <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow"></div>
-                        <div id="startLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 0<br>Start</div>
-                    </div>
-                    <div id="paymentEndMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2">
-                        <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow"></div>
-                        <div id="paymentEndLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 10<br>Saving Term Ends</div>
-                    </div>
-                    <div id="maturityMilestone" class="milestone-point absolute top-1/2 -translate-y-1/2 -translate-x-1/2" style="right: 0;">
-                        <div class="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow"></div>
-                        <div id="maturityLabel" class="absolute top-6 left-1/2 -translate-x-1/2 text-center text-xs w-24">Age 20<br>Maturity</div>
-                    </div>
-                </div>
+            <!-- NEW: Contribution & Payouts Timeline -->
+            <div class="my-8">
+                 <p class="text-lg font-semibold text-slate-700 text-center mb-4">Your Savings & Rewards Journey</p>
+                 <div id="contributionTimeline" class="contribution-timeline-wrapper">
+                    <!-- Bars will be dynamically inserted here -->
+                 </div>
             </div>
 
-            <!-- Your retirement fund goal: ... -->
+            <!-- Fund Goal -->
             <div id="goalStatement" class="text-center bg-gray-50 border border-gray-200 rounded-lg p-4 mb-8">
-                <p class="text-sm font-medium text-slate-600 mb-1">Your savings goal:</p>
-                <p class="text-2xl font-bold text-slate-800">Please enter values and click "Calculate"</p>
+                <!-- Content dynamically generated -->
             </div>
             
-            <!-- Annual Saving | Saving Terms (years) | Total Saving ..... -->
-            <div id="clientSummary" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-                <div class="summary-box">
-                    <p class="summary-box-label">Annual Saving</p>
-                    <p class="summary-box-value">RM 0</p>
-                </div>
-                <div class="summary-box">
-                    <p class="summary-box-label">Saving Term (years)</p>
-                    <p class="summary-box-value">0</p>
-                </div>
-                <div class="summary-box">
-                    <p class="summary-box-label">Total Saving</p>
-                    <p class="summary-box-value">RM 0</p>
-                </div>
-                <div class="summary-box">
-                    <p class="summary-box-label">Coverage Period</p>
-                    <p class="summary-box-value">0</p>
-                </div>
-                <div class="summary-box col-span-2">
-                     <p class="summary-box-label">Death / TPD Payout (Yr 1-5)</p>
-                     <p class="summary-box-value">RM 0</p>
-                </div>
+            <!-- Key Metrics -->
+            <div id="clientSummary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <!-- Content is dynamically generated -->
             </div>
         </div>
 
-        <!-- 3. The payout table / growth chart / protection details -->
+        <!-- 3. The payout table / growth chart -->
         <div id="detailsSection" class="card">
             <div class="border-b border-slate-200 mb-4">
                 <nav class="flex space-x-4" aria-label="Tabs">
                     <button id="tabTable" class="tab-button active">Payout Table</button>
                     <button id="tabChart" class="tab-button">Growth Chart</button>
-                    <button id="tabProtection" class="tab-button">Protection Details</button>
-                    <button id="tabReport" class="tab-button print-only">Print</button>
                 </nav>
             </div>
             
@@ -434,9 +418,9 @@
                             <thead class="table-header sticky top-0">
                                 <tr>
                                     <th class="p-3 font-semibold text-center w-1/12">Year</th>
-                                    <th class="p-3 font-semibold text-right w-3/12">Annual Saving</th>
-                                    <th class="p-3 font-semibold text-right w-4/12">Guaranteed Annual Payout (RM)</th>
-                                    <th class="p-3 text-right font-semibold w-4/12">Payouts Left to Grow (<span id="interestRateHeader">0.0</span>% p.a.)</th>
+                                    <th class="p-3 font-semibold text-right w-3/12">Yearly Saving</th>
+                                    <th class="p-3 font-semibold text-right w-4/12">Cash every year</th>
+                                    <th class="p-3 text-right font-semibold w-4/12">Keep to Grow (<span id="interestRateHeader">0.0</span>% p.a.)</th>
                                 </tr>
                             </thead>
                             <tbody id="savingsTableBody">
@@ -450,126 +434,123 @@
                          <canvas id="growthChart"></canvas>
                     </div>
                 </div>
-                <!-- Protection Details Tab Content -->
-                <div id="protectionContent" class="hidden">
-                    <div class="pt-6">
-                        <h3 id="protectionTitle" class="text-xl font-semibold text-slate-800 mb-4">How Your Goal is Protected</h3>
-                        <div class="grid md:grid-cols-2 gap-8 items-center">
-                            <div>
-                                <label for="protectionYearSlider" class="block text-sm font-medium text-slate-600 mb-2">Select a year to see the protection value:</label>
-                                <input type="range" id="protectionYearSlider" min="1" max="20" value="7" class="w-full">
-                                <div class="text-center text-lg font-semibold mt-2">Year <span id="protectionYearLabel">7</span></div>
-                            </div>
-                            <div id="protectionNarrative" class="space-y-4 p-6 rounded-lg bg-slate-50 border border-slate-300">
-                                <!-- Dynamic content will be injected here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         
         <!-- 4. Final Payouts & Performance -->
         <div class="card mt-8">
             <h2 class="section-title">Final Payouts & Performance</h2>
-            <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
-                <!-- Column 1: Guaranteed -->
-                <div class="flex flex-col space-y-4 p-6 rounded-lg border border-blue-300 bg-blue-50">
-                    <h3 class="text-lg font-semibold text-blue-800">Total Payout</h3>
-                    <div class="flex-grow space-y-2">
-                        <div class="flex justify-between items-baseline">
-                            <p class="text-sm text-blue-700">Accumulated Payouts (a)</p>
-                            <p id="totalAccumulatedGuaranteedPayout" class="text-xl font-semibold text-blue-800">RM 0</p>
-                        </div>
-                        <div class="flex justify-between items-baseline">
-                            <p class="text-sm text-blue-700">Maturity Payout (b)</p>
-                            <p id="guaranteedMaturity" class="text-xl font-semibold text-blue-800">RM 0</p>
-                        </div>
-                    </div>
-                    <div class="text-blue-800 pt-4 border-t border-blue-200 highlighted-blue">
-                        <p class="text-md font-medium">Total Guaranteed Payout (a+b)</p>
-                        <p id="totalGuaranteedPayout" class="text-4xl font-bold">RM 0</p>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
+                <!-- Left Card: Your Total Savings -->
+                <div class="lg:col-span-2 flex flex-col text-center items-center justify-center p-6 rounded-lg bg-slate-50 border h-full">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-500 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.5c-1.3 1.4-1.3 3.6 0 5"/><path d="M16.5 10.5c0-3-2.5-5.5-5.5-5.5s-5.5 2.5-5.5 5.5c0 2.2 1.3 4 3 4.8V19c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3.7c1.7-.8 3-2.6 3-4.8Z"/><path d="M2 12c0-3.3 2.7-6 6-6"/><path d="M22 12c0-3.3-2.7-6-6-6"/></svg>
+                    <p id="totalPremiumsLabel" class="text-md font-semibold text-slate-700">Total Savings</p>
+                    <p id="totalPremiums" class="text-4xl font-bold text-slate-800 mt-1">RM 0</p>
                 </div>
-                <!-- Column 2: Projected & Growth -->
-                <div class="flex flex-col space-y-4 p-6 rounded-lg border border-green-300 bg-green-50">
-                     <h3 class="text-lg font-semibold text-green-800">Projected Total Payout</h3>
-                     <div class="flex-grow space-y-2">
+        
+                <!-- Connector -->
+                <div class="text-center">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-slate-400 mx-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+        
+                <!-- Right Card: Your Total Return -->
+                <div class="lg:col-span-2 p-6 rounded-lg border border-blue-300 bg-blue-50/50 h-full">
+                     <div class="space-y-3">
                         <div class="flex justify-between items-baseline">
-                            <!-- ADDED: text-blue-800 class for visual association -->
-                            <p class="text-sm text-blue-800">Total Guaranteed Payout (a+b)</p>
-                            <p id="guaranteedForEquation" class="text-xl font-semibold text-blue-800">RM 0</p>
+                            <p class="text-sm text-slate-700">Accumulated Payouts (a)</p>
+                            <p id="totalAccumulatedGuaranteedPayout" class="text-lg font-semibold text-slate-800">RM 0</p>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <p class="text-sm text-slate-700">Maturity Payout (b)</p>
+                            <p id="guaranteedMaturity" class="text-lg font-semibold text-slate-800">RM 0</p>
                         </div>
                          <div class="flex justify-between items-baseline">
-                            <p class="text-sm text-green-700">+ Non-Guaranteed Cash Value (c)</p>
-                            <p id="cashValue" class="text-xl font-semibold text-green-800">RM 0</p>
+                            <p class="text-sm text-green-700">Maturity Bonus (c)</p>
+                            <p id="cashValue" class="text-lg font-semibold text-green-800">RM 0</p>
                         </div>
                     </div>
-                     <div class="text-green-800 pt-4 border-t border-green-200 highlighted-green">
-                        <p class="text-md font-medium">Total Projected Payout (a+b+c)</p>
-                        <p id="totalProjectedPayout" class="text-4xl font-bold">RM 0</p>
+                    <div class="mt-4 pt-4 border-t border-blue-200">
+                        <p class="text-md font-medium text-blue-800">Total Maturity (a+b+c)</p>
+                        <p id="totalProjectedPayout" class="text-4xl font-bold text-blue-800">RM 0</p>
                     </div>
-                </div>
-            </div>
-             <!-- Moved Total Savings & Projected Growth to this section -->
-            <div class="mt-6 pt-6 border-t border-slate-200 grid md:grid-cols-2 gap-8">
-                <div>
-                    <p id="totalPremiumsLabel" class="text-sm text-slate-500">Total Savings</p>
-                    <p id="totalPremiums" class="text-3xl font-semibold text-slate-700">RM 0</p>
-                </div>
-                <div class="text-green-600">
-                    <p class="text-sm">Projected Growth</p>
-                    <p id="totalGrowth" class="text-3xl font-bold">RM 0</p>
+                     <div class="mt-4 text-center bg-green-100/50 p-3 rounded-md">
+                         <p class="text-sm font-semibold text-green-700">Projected Growth</p>
+                         <p id="totalGrowth" class="text-2xl font-bold text-green-800">RM 0</p>
+                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- 5. Key benefits -->
-        <div id="benefitsSection" class="card mt-8">
-            <h2 class="section-title">Key Benefits</h2>
-            <div class="benefits-carousel relative w-full overflow-hidden">
-                <div class="carousel-track flex">
-                     <div class="carousel-slide px-2">
-                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                                <i data-lucide="wallet" class="w-6 h-6"></i>
-                            </div>
-                            <p class="font-semibold text-slate-800 text-sm mb-1">Guaranteed Payouts</p>
-                            <p class="text-xs text-slate-500">Receive annual payouts from year 1 to maturity.</p>
+        <!-- 5. NEW: Your Customized Protection Plan -->
+        <div id="customizedBenefitsSection" class="card mt-8">
+            <h2 class="section-title">Your Customized Protection Plan</h2>
+
+            <!-- NEW: Interactive Slider -->
+            <div class="p-4 rounded-lg bg-slate-50 border mb-6">
+                <label for="protectionYearSlider" class="block text-sm font-medium text-slate-600 mb-2">Use the slider to see how your protection works in different years:</label>
+                <input type="range" id="protectionYearSlider" min="1" max="20" value="1" class="w-full">
+                <div class="text-center text-lg font-semibold mt-2">Protection Scenario for: <span class="text-blue-600">Year <span id="protectionYearLabel">1</span></span></div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Death/TPD Card (Always Visible) -->
+                <div id="deathTpdCard" class="benefit-card">
+                    <div class="icon-container bg-red-100 text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Death / Total & Permanent Disability (TPD)</h3>
+                        <p class="text-sm text-slate-600 mt-1">Provides a lump sum payment to support your family's needs if the unforeseen happens.</p>
+                        <div id="deathPayoutDetails" class="mt-3 pt-3 border-t text-sm space-y-2">
+                             <!-- Dynamic content will be injected here -->
                         </div>
-                     </div>
-                     <div class="carousel-slide px-2">
-                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                                <i data-lucide="shield-check" class="w-6 h-6"></i>
-                            </div>
-                            <p class="font-semibold text-slate-800 text-sm mb-1">Financial Safety Net</p>
-                            <p class="text-xs text-slate-500">Combining savings and protection for a secure financial future.</p>
-                        </div>
-                     </div>
-                     <div class="carousel-slide px-2">
-                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                                <i data-lucide="dollar-sign" class="w-6 h-6"></i>
-                            </div>
-                            <p class="font-semibold text-slate-800 text-sm mb-1">Short Saving Term</p>
-                            <p class="text-xs text-slate-500">Save for a short period, then enjoy a longer policy term.</p>
-                        </div>
-                     </div>
-                     <div class="carousel-slide px-2">
-                         <div class="flex flex-col items-center text-center p-4 rounded-lg bg-white shadow-sm transition-transform duration-200 hover:scale-105 benefit-card">
-                             <div class="h-12 w-12 flex items-center justify-center bg-blue-500 rounded-full text-white mb-2">
-                                <i data-lucide="heart-pulse" class="w-6 h-6"></i>
-                            </div>
-                            <p class="font-semibold text-slate-800 text-sm mb-1">Waiver Benefits</p>
-                            <p class="text-xs text-slate-500">Future savings are waived in case of total permanent disability.</p>
-                        </div>
-                     </div>
+                    </div>
                 </div>
-                <button id="carousel-btn-left" class="carousel-button carousel-button-left px-2 py-4"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-                <button id="carousel-btn-right" class="carousel-button carousel-button-right px-2 py-4"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+
+                <!-- PruLegacy Card -->
+                <div id="pruLegacyCard" class="benefit-card hidden">
+                    <div class="icon-container bg-sky-100 text-sky-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">PruLegacy: Continuous Financial Certainty</h3>
+                        <p class="text-sm text-slate-600 mt-1">This will continue to provide a steady stream of annual payouts for your loved ones when you are no longer able to support them upon death or TPD.</p>
+                        <div class="mt-3 pt-3 border-t text-sm space-y-2">
+                             <div class="flex justify-between"><span>Annual Payouts Continue:</span> <strong id="pruLegacyPayout" class="font-semibold">RM 0 / year</strong></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PruWaiver Card -->
+                <div id="pruWaiverCard" class="benefit-card hidden">
+                    <div class="icon-container bg-purple-100 text-purple-600">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">PruWaiver: Auto Save</h3>
+                        <p class="text-sm text-slate-600 mt-1">Waives all future savings for the plan in the event that you are diagnosed with a critical illness, ensuring your savings goal stays on track.</p>
+                         <div class="mt-3 pt-3 border-t text-sm space-y-2">
+                             <div id="pruWaiverDetails"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parent Waiver Card -->
+                <div id="parentWaiverCard" class="benefit-card hidden">
+                     <div class="icon-container bg-amber-100 text-amber-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800">Parent Waiver: Secure Your Child's Future</h3>
+                        <p class="text-sm text-slate-600 mt-1">Should the parent pass away, suffer TPD, or be diagnosed with a critical illness, all future savings will be waived, guaranteeing the child's fund is secure.</p>
+                         <div class="mt-3 pt-3 border-t text-sm space-y-2">
+                            <div id="parentWaiverDetails"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
 
         <div class="flex justify-center mt-8">
             <button id="generatePdfBtn" class="btn-secondary hidden">Generate Report (PDF)</button>
@@ -618,20 +599,33 @@
         const nonGuaranteedValueInput = document.getElementById('nonGuaranteedValue');
         const deathPayoutEarlyInput = document.getElementById('deathPayoutEarly');
         const deathPayoutLateInput = document.getElementById('deathPayoutLate');
-        const clientNameInput = document.getElementById('clientName'); // NEW: Added client name input
+        const clientNameInput = document.getElementById('clientName');
+        
+        // Rider Checkboxes
+        const pruLegacyCheckbox = document.getElementById('pruLegacyCheckbox');
+        const pruWaiverCheckbox = document.getElementById('pruWaiverCheckbox');
+        const parentWaiverCheckbox = document.getElementById('parentWaiverCheckbox');
+
+        // Customized Benefit Cards
+        const deathPayoutDetails = document.getElementById('deathPayoutDetails');
+        const pruLegacyCard = document.getElementById('pruLegacyCard');
+        const pruWaiverCard = document.getElementById('pruWaiverCard');
+        const parentWaiverCard = document.getElementById('parentWaiverCard');
+        const pruLegacyPayout = document.getElementById('pruLegacyPayout');
+        const pruWaiverDetails = document.getElementById('pruWaiverDetails');
+        const parentWaiverDetails = document.getElementById('parentWaiverDetails');
         
         const savingsTableBody = document.getElementById('savingsTableBody');
         const summaryCard = document.getElementById('summaryCard');
         const detailsSection = document.getElementById('detailsSection');
-        const timelineContainer = document.getElementById('timelineContainer');
-        const benefitsSection = document.getElementById('benefitsSection');
         const goalStatementEl = document.getElementById('goalStatement');
         const clientSummaryEl = document.getElementById('clientSummary');
+
+        // Contribution Timeline Elements
+        const contributionTimelineContainer = document.getElementById('contributionTimeline');
         
         // Summary Card Elements
         const totalProjectedPayoutEl = document.getElementById('totalProjectedPayout');
-        const totalGuaranteedPayoutEl = document.getElementById('totalGuaranteedPayout');
-        const guaranteedForEquationEl = document.getElementById('guaranteedForEquation');
         const totalPremiumsEl = document.getElementById('totalPremiums');
         const totalPremiumsLabel = document.getElementById('totalPremiumsLabel');
         const totalAccumulatedGuaranteedPayoutEl = document.getElementById('totalAccumulatedGuaranteedPayout');
@@ -644,42 +638,25 @@
         // Tab Elements
         const tabChartBtn = document.getElementById('tabChart');
         const tabTableBtn = document.getElementById('tabTable');
-        const tabProtectionBtn = document.getElementById('tabProtection');
-        const chartContent = document.getElementById('chartContent');
-        const tableContent = document.getElementById('tableContent');
-        const protectionContent = document.getElementById('protectionContent');
-
-        // Protection Card Elements
-        const protectionTitle = document.getElementById('protectionTitle');
+        
+        // Protection Elements
         const protectionYearSlider = document.getElementById('protectionYearSlider');
         const protectionYearLabel = document.getElementById('protectionYearLabel');
-        const protectionNarrative = document.getElementById('protectionNarrative');
-        const interestRateHeader = document.getElementById('interestRateHeader');
-
+        
         // Modal Elements
         const editModal = document.getElementById('editModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalSavingsInput = document.getElementById('modalSavingsInput');
-        // Removed the modalPercentageInput variable
         const applyToFollowingCheckbox = document.getElementById('applyToFollowing');
         const saveModalBtn = document.getElementById('saveModalBtn');
         const cancelBtn = document.getElementById('cancelBtn');
 
-        // Carousel Elements
-        const carouselTrack = document.querySelector('.carousel-track');
-        const carouselBtnLeft = document.getElementById('carousel-btn-left');
-        const carouselBtnRight = document.getElementById('carousel-btn-right');
-        let currentSlide = 0;
-
         // App state
         let guaranteedPayoutsData = [];
-        let percentageData = [];
-        let interestRate = 0;
         let policyPeriod = 0;
         let lineChartInstance = null;
         let currentlyEditingYear = -1;
-        let finalGuaranteedPayout = 0;
-        let finalProjectedPayout = 0;
+        let accumulatedValues = [];
         
         Chart.register(ChartDataLabels);
 
@@ -692,19 +669,7 @@
         cancelBtn.addEventListener('click', closeModal);
         tabChartBtn.addEventListener('click', () => switchTab('chart'));
         tabTableBtn.addEventListener('click', () => switchTab('table'));
-        tabProtectionBtn.addEventListener('click', () => switchTab('protection'));
-        tabReport.addEventListener('click', () => {
-             // Temporarily show all tab content for printing
-             tableContent.classList.remove('hidden');
-             chartContent.classList.remove('hidden');
-             protectionContent.classList.remove('hidden');
-             
-             // The print dialog will handle the rest
-             window.print();
-             
-             // After printing, revert to the initial state
-             switchTab('table');
-        });
+        
         savingsGoalSelect.addEventListener('change', () => {
             if (savingsGoalSelect.value === 'education') {
                 parentAgeWrapper.classList.remove('hidden');
@@ -714,215 +679,84 @@
                 clientAgeInput.previousElementSibling.textContent = "Client's Current Age";
             }
         });
-        protectionYearSlider.addEventListener('input', updateProtectionNarrative);
+        protectionYearSlider.addEventListener('input', renderCustomizedBenefits);
+
+        // Rider & policy type listeners
+        pruLegacyCheckbox.addEventListener('change', calculateAndRender);
+        pruWaiverCheckbox.addEventListener('change', calculateAndRender);
+        parentWaiverCheckbox.addEventListener('change', calculateAndRender);
+        juvenilePolicyCheckbox.addEventListener('change', calculateAndRender);
+
         window.addEventListener('DOMContentLoaded', () => {
             initializeDefaultValues();
-            renderTable([]);
-            renderSummary(0,0,0,0,0,0,10,savingsGoalSelect.value,0,0);
-            renderBenefitsSection(10,20,'education');
-            renderClientSummary(0,0,0,0,0,0);
-            renderLineChart({
-                labels: [],
-                projectedPayoutValues: [],
-                guaranteedPayoutValues: [],
-                totalPremiumValues: [],
-                protectionValues: [],
-                annualPayoutValues: [],
-            });
-            updateProtectionNarrative();
-            updateTimeline();
-            setupCarousel();
-        });
-        document.getElementById('startMilestone').addEventListener('click', () => {
-            switchTab('protection');
-            protectionYearSlider.value = 1;
-            updateProtectionNarrative();
-        });
-        document.getElementById('paymentEndMilestone').addEventListener('click', () => {
-            switchTab('protection');
-            const paymentTerm = parseInt(paymentTermInput.value);
-            if (!isNaN(paymentTerm) && paymentTerm > 0) {
-                 protectionYearSlider.value = paymentTerm;
-                 updateProtectionNarrative();
-            }
-        });
-        document.getElementById('maturityMilestone').addEventListener('click', () => {
-            switchTab('protection');
-            const policyPeriod = parseInt(policyPeriodInput.value);
-            if (!isNaN(policyPeriod) && policyPeriod > 0) {
-                protectionYearSlider.value = policyPeriod;
-                updateProtectionNarrative();
-            }
+            calculateAndRender(); 
         });
 
-        // --- Carousel functions ---
-        function setupCarousel() {
-            const slides = document.querySelectorAll('.carousel-slide');
-            const totalSlides = slides.length;
-            
-            function updateCarousel() {
-                const carouselContainer = document.querySelector('.benefits-carousel');
-                const slideWidth = slides[0].offsetWidth;
-                const visibleSlides = window.innerWidth >= 1024 ? 4 : (window.innerWidth >= 768 ? 2 : 1);
-                const maxTransform = (totalSlides - visibleSlides) * slideWidth;
-                const newTransform = -currentSlide * slideWidth;
-                carouselTrack.style.transform = `translateX(${newTransform}px)`;
-
-                // Hide/show buttons based on slide position
-                carouselBtnLeft.classList.toggle('invisible', currentSlide === 0);
-                carouselBtnRight.classList.toggle('invisible', currentSlide >= totalSlides - visibleSlides);
-            }
-            
-            carouselBtnLeft.addEventListener('click', () => {
-                currentSlide = Math.max(0, currentSlide - 1);
-                updateCarousel();
-            });
-
-            carouselBtnRight.addEventListener('click', () => {
-                const visibleSlides = window.innerWidth >= 1024 ? 4 : (window.innerWidth >= 768 ? 2 : 1);
-                currentSlide = Math.min(totalSlides - visibleSlides, currentSlide + 1);
-                updateCarousel();
-            });
-            
-            window.addEventListener('resize', () => {
-                 currentSlide = 0;
-                 updateCarousel();
-            });
-            
-            // Initial call to set up the carousel
-            updateCarousel();
-        }
-
-
-        // Initialize default empty values for inputs
         function initializeDefaultValues() {
-            clientAgeInput.value = '';
-            parentAgeInput.value = '';
-            annualPremiumInput.value = '';
-            annualGuaranteedPayoutInput.value = '';
-            maturityValueInput.value = '';
-            nonGuaranteedValueInput.value = '';
-            deathPayoutEarlyInput.value = '';
-            deathPayoutLateInput.value = '';
+            clientAgeInput.value = ''; parentAgeInput.value = '';
+            annualPremiumInput.value = ''; annualGuaranteedPayoutInput.value = '';
+            maturityValueInput.value = ''; nonGuaranteedValueInput.value = '';
+            deathPayoutEarlyInput.value = ''; deathPayoutLateInput.value = '';
         }
 
         function runInitialCalculation() {
             policyPeriod = parseInt(policyPeriodInput.value);
             const initialGuaranteedPayout = parseFloat(annualGuaranteedPayoutInput.value);
-            // Removed the initialPercentage variable
-            const initialPercentage = 0; // Set a default value to avoid errors
-
-            // Added check to ensure valid numeric inputs before proceeding
-            if (isNaN(policyPeriod) || isNaN(initialGuaranteedPayout) || isNaN(initialPercentage) || policyPeriod <= 0) {
-                const message = 'Please enter valid inputs.';
-                showTemporaryMessage(message);
+            if (isNaN(policyPeriod) || isNaN(initialGuaranteedPayout) || policyPeriod <= 0) {
+                showTemporaryMessage('Please enter valid inputs.');
                 return;
             }
-
             guaranteedPayoutsData = Array(policyPeriod).fill(initialGuaranteedPayout);
-            percentageData = Array(policyPeriod).fill(initialPercentage);
-
-            
             protectionYearSlider.max = policyPeriod;
-            protectionYearSlider.value = Math.min(7, policyPeriod);
-
-
+            protectionYearSlider.value = 1;
             calculateAndRender();
-            
             summaryCard.classList.remove('hidden');
             detailsSection.classList.remove('hidden');
             generatePdfBtn.classList.remove('hidden');
-            switchTab('table'); // Set initial tab to table
+            switchTab('table');
         }
 
         function calculateAndRender() {
-            // All calculation logic is now centralized here
-            const goal = savingsGoalSelect.value;
-            const isJuvenile = juvenilePolicyCheckbox.checked;
             const annualPremium = parseFloat(annualPremiumInput.value) || 0;
             const paymentTerm = parseInt(paymentTermInput.value) || 0;
             const maturityValue = parseFloat(maturityValueInput.value) || 0;
             const nonGuaranteedValue = parseFloat(nonGuaranteedValueInput.value) || 0;
-            interestRate = parseFloat(interestRateInput.value) / 100 || 0;
+            const interestRate = parseFloat(interestRateInput.value) / 100 || 0;
             policyPeriod = parseInt(policyPeriodInput.value) || 0;
             const deathPayoutEarly = parseFloat(deathPayoutEarlyInput.value) || 0;
             const deathPayoutLate = parseFloat(deathPayoutLateInput.value) || 0;
             const clientAge = parseInt(clientAgeInput.value) || 0;
-            const parentAge = parseInt(parentAgeInput.value) || 0;
-            
-            // Check for valid numeric inputs, which was the source of the TypeError
-            if (isNaN(annualPremium) || isNaN(paymentTerm) || isNaN(maturityValue) || isNaN(nonGuaranteedValue) || isNaN(interestRate) || isNaN(policyPeriod) || isNaN(deathPayoutEarly) || isNaN(deathPayoutLate) || isNaN(clientAge) || isNaN(parentAge)) {
-                return;
-            }
-
-
-            // Update UI based on Goal
-            if (goal === 'education') {
-                parentAgeWrapper.classList.remove('hidden');
-                clientAgeInput.previousElementSibling.textContent = "Child's Current Age";
-                timelineContainer.classList.remove('hidden');
-            } else {
-                parentAgeWrapper.classList.add('hidden');
-                clientAgeInput.previousElementSibling.textContent = "Client's Current Age";
-                timelineContainer.classList.remove('hidden');
-            }
-
+            const isJuvenile = juvenilePolicyCheckbox.checked;
 
             let accumulatedPayoutValue = 0;
+            let totalPremiumsPaid = 0;
+            accumulatedValues = [];
             const tableRows = [];
             const growthData = {
-                labels: [],
-                projectedPayoutValues: [],
-                guaranteedPayoutValues: [],
-                totalPremiumValues: [],
-                protectionValues: [],
-                annualPayoutValues: [],
+                labels: [], projectedPayoutValues: [], guaranteedPayoutValues: [],
+                totalPremiumValues: [], protectionValues: [], annualPayoutValues: [],
             };
-
-            let totalPremiumsPaid = 0;
-            const juvenileLien = [0.4, 0.6, 0.8, 1.0, 1.0]; // 40%, 60%, 80%, 100%, 100%
-            
-            // Added check to make sure arrays are initialized
-            if (!guaranteedPayoutsData || guaranteedPayoutsData.length === 0) {
-                 guaranteedPayoutsData = Array(policyPeriod).fill(0);
-                 percentageData = Array(policyPeriod).fill(0);
+            const juvenileLien = [0.4, 0.6, 0.8, 1.0, 1.0];
+            if (!guaranteedPayoutsData || guaranteedPayoutsData.length !== policyPeriod) {
+                 guaranteedPayoutsData = Array(policyPeriod).fill(parseFloat(annualGuaranteedPayoutInput.value) || 0);
             }
-
             for (let year = 1; year <= policyPeriod; year++) {
-                let premiumPaidThisYear = 0;
-                if (year <= paymentTerm) {
-                    premiumPaidThisYear = annualPremium;
-                    totalPremiumsPaid += annualPremium;
-                }
-
-                const annualPayout = guaranteedPayoutsData[year - 1];
-                
-                const interestEarned = accumulatedPayoutValue * interestRate;
-                accumulatedPayoutValue += interestEarned + annualPayout;
-
-                tableRows.push({
-                    year: year,
-                    premiumPaidThisYear: premiumPaidThisYear,
-                    annualPayout: annualPayout,
-                    percentage: percentageData[year-1],
-                    total: accumulatedPayoutValue
-                });
-                
+                let premiumPaidThisYear = (year <= paymentTerm) ? annualPremium : 0;
+                totalPremiumsPaid += premiumPaidThisYear;
+                const annualPayout = guaranteedPayoutsData[year - 1] || 0;
+                accumulatedPayoutValue += (accumulatedPayoutValue * interestRate) + annualPayout;
+                accumulatedValues.push(accumulatedPayoutValue);
+                tableRows.push({ year, premiumPaidThisYear, annualPayout, total: accumulatedPayoutValue });
                 let guaranteedPayoutForChart = accumulatedPayoutValue;
                 let projectedPayoutForChart = accumulatedPayoutValue;
-
                 if (year === policyPeriod) {
                     guaranteedPayoutForChart += maturityValue;
                     projectedPayoutForChart += maturityValue + nonGuaranteedValue;
                 }
-                
-                let protectionPayout = 0;
+                let protectionPayout = deathPayoutLate;
                 if (year <= 5) {
                     protectionPayout = isJuvenile ? deathPayoutEarly * juvenileLien[year-1] : deathPayoutEarly;
-                } else {
-                    protectionPayout = deathPayoutLate;
                 }
-
                 growthData.labels.push(`Year ${year}`);
                 growthData.projectedPayoutValues.push(projectedPayoutForChart);
                 growthData.guaranteedPayoutValues.push(guaranteedPayoutForChart);
@@ -930,239 +764,191 @@
                 growthData.protectionValues.push(protectionPayout);
                 growthData.annualPayoutValues.push(annualPayout);
             }
-
-            finalGuaranteedPayout = accumulatedPayoutValue + maturityValue;
-            finalProjectedPayout = finalGuaranteedPayout + nonGuaranteedValue;
-
+            const finalGuaranteedPayout = accumulatedPayoutValue + maturityValue;
+            const finalProjectedPayout = finalGuaranteedPayout + nonGuaranteedValue;
             renderTable(tableRows);
-            renderSummary(totalPremiumsPaid, finalGuaranteedPayout, finalProjectedPayout, accumulatedPayoutValue, maturityValue, nonGuaranteedValue, paymentTerm, goal, clientAge, parentAge);
-            renderBenefitsSection(paymentTerm, policyPeriod, goal);
-            renderClientSummary(annualPremium, paymentTerm, totalPremiumsPaid, policyPeriod, deathPayoutEarly, deathPayoutLate);
+            renderSummary(totalPremiumsPaid, finalGuaranteedPayout, finalProjectedPayout, accumulatedPayoutValue, maturityValue, nonGuaranteedValue, paymentTerm, savingsGoalSelect.value, clientAge);
+            renderClientSummary(annualPremium, paymentTerm, totalPremiumsPaid, policyPeriod);
             renderLineChart(growthData);
-            updateProtectionNarrative();
-            updateTimeline();
+            renderContributionTimeline();
+            renderCustomizedBenefits(); 
+        }
+        
+        function renderCustomizedBenefits() {
+            const annualPremium = parseFloat(annualPremiumInput.value) || 0;
+            const paymentTerm = parseInt(paymentTermInput.value) || 0;
+            const annualPayout = parseFloat(annualGuaranteedPayoutInput.value) || 0;
+            const deathPayoutEarly = parseFloat(deathPayoutEarlyInput.value) || 0;
+            const deathPayoutLate = parseFloat(deathPayoutLateInput.value) || 0;
+            const isJuvenile = juvenilePolicyCheckbox.checked;
+            const juvenileLien = [0.4, 0.6, 0.8, 1.0, 1.0];
+            const selectedYear = parseInt(protectionYearSlider.value);
+
+            protectionYearLabel.textContent = selectedYear;
+            deathPayoutDetails.innerHTML = ''; 
+
+            if (isJuvenile) {
+                deathPayoutDetails.innerHTML = `
+                    <div class="flex justify-between"><span>Payout at Year 1 (40%):</span> <strong class="font-semibold">${formatCurrency(deathPayoutEarly * juvenileLien[0])}</strong></div>
+                    <div class="flex justify-between"><span>Payout at Year 5 (100%):</span> <strong class="font-semibold">${formatCurrency(deathPayoutEarly * juvenileLien[4])}</strong></div>
+                    <div class="flex justify-between"><span>Payout (Years 6+):</span> <strong class="font-semibold">${formatCurrency(deathPayoutLate)}</strong></div>
+                `;
+            } else {
+                deathPayoutDetails.innerHTML = `
+                    <div class="flex justify-between"><span>Payout (Years 1-5):</span> <strong class="font-semibold">${formatCurrency(deathPayoutEarly)}</strong></div>
+                    <div class="flex justify-between"><span>Payout (Years 6+):</span> <strong class="font-semibold">${formatCurrency(deathPayoutLate)}</strong></div>
+                `;
+            }
+
+            pruLegacyCard.classList.toggle('hidden', !pruLegacyCheckbox.checked);
+            pruLegacyPayout.textContent = `${formatCurrency(annualPayout)} / year`;
+
+            const remainingPremiums = Math.max(0, paymentTerm - selectedYear) * annualPremium;
+            
+            pruWaiverCard.classList.toggle('hidden', !pruWaiverCheckbox.checked);
+            pruWaiverDetails.innerHTML = `<div class="text-xs text-slate-500 mb-1">Based on an event in Year ${selectedYear}:</div>
+                <div class="flex justify-between"><span>Future Savings Waived:</span> <strong class="font-semibold">${formatCurrency(remainingPremiums)}</strong></div>`;
+
+            parentWaiverCard.classList.toggle('hidden', !parentWaiverCheckbox.checked);
+            parentWaiverDetails.innerHTML = `<div class="text-xs text-slate-500 mb-1">Based on an event in Year ${selectedYear}:</div>
+                <div class="flex justify-between"><span>Future Savings Waived:</span> <strong class="font-semibold">${formatCurrency(remainingPremiums)}</strong></div>`;
         }
 
         function saveScenario() {
             const scenario = {
-                savingsGoal: savingsGoalSelect.value,
-                isJuvenile: juvenilePolicyCheckbox.checked,
-                clientAge: clientAgeInput.value,
-                parentAge: parentAgeInput.value,
-                annualPremium: annualPremiumInput.value,
-                paymentTerm: paymentTermInput.value,
-                annualGuaranteedPayout: annualGuaranteedPayoutInput.value,
-                policyPeriod: policyPeriodInput.value,
-                interestRate: interestRateInput.value,
-                maturityValue: maturityValueInput.value,
-                nonGuaranteedValue: nonGuaranteedValueInput.value,
-                deathPayoutEarly: deathPayoutEarlyInput.value,
-                deathPayoutLate: deathPayoutLateInput.value,
-                guaranteedPayoutsData: guaranteedPayoutsData,
-                percentageData: percentageData
+                savingsGoal: savingsGoalSelect.value, juvenilePolicy: juvenilePolicyCheckbox.checked,
+                clientAge: clientAgeInput.value, parentAge: parentAgeInput.value,
+                annualPremium: annualPremiumInput.value, paymentTerm: paymentTermInput.value,
+                annualGuaranteedPayout: annualGuaranteedPayoutInput.value, policyPeriod: policyPeriodInput.value,
+                interestRate: interestRateInput.value, maturityValue: maturityValueInput.value,
+                nonGuaranteedValue: nonGuaranteedValueInput.value, deathPayoutEarly: deathPayoutEarlyInput.value,
+                deathPayoutLate: deathPayoutLateInput.value, guaranteedPayoutsData: guaranteedPayoutsData,
+                pruLegacy: pruLegacyCheckbox.checked, pruWaiver: pruWaiverCheckbox.checked, parentWaiver: parentWaiverCheckbox.checked,
             };
             localStorage.setItem('savedScenario', JSON.stringify(scenario));
-            // A more elegant alert to the user, using a temporary message box.
-            const message = "Scenario saved to local storage!";
-            showTemporaryMessage(message);
+            showTemporaryMessage("Scenario saved to local storage!");
         }
         
         function loadScenario() {
             const savedScenario = localStorage.getItem('savedScenario');
             if (savedScenario) {
                 const scenario = JSON.parse(savedScenario);
-                savingsGoalSelect.value = scenario.savingsGoal;
-                juvenilePolicyCheckbox.checked = scenario.isJuvenile;
-                clientAgeInput.value = scenario.clientAge;
-                parentAgeInput.value = scenario.parentAge;
-                annualPremiumInput.value = scenario.annualPremium;
-                paymentTermInput.value = scenario.paymentTerm;
-                annualGuaranteedPayoutInput.value = scenario.annualGuaranteedPayout;
-                policyPeriodInput.value = scenario.policyPeriod;
-                interestRateInput.value = scenario.interestRate;
-                maturityValueInput.value = scenario.maturityValue;
-                nonGuaranteedValueInput.value = scenario.nonGuaranteedValue;
-                deathPayoutEarlyInput.value = scenario.deathPayoutEarly;
-                deathPayoutLateInput.value = scenario.deathPayoutLate;
-                guaranteedPayoutsData = scenario.guaranteedPayoutsData;
-                percentageData = scenario.percentageData;
+                savingsGoalSelect.value = scenario.savingsGoal; juvenilePolicyCheckbox.checked = scenario.juvenilePolicy;
+                clientAgeInput.value = scenario.clientAge; parentAgeInput.value = scenario.parentAge;
+                annualPremiumInput.value = scenario.annualPremium; paymentTermInput.value = scenario.paymentTerm;
+                annualGuaranteedPayoutInput.value = scenario.annualGuaranteedPayout; policyPeriodInput.value = scenario.policyPeriod;
+                interestRateInput.value = scenario.interestRate; maturityValueInput.value = scenario.maturityValue;
+                nonGuaranteedValueInput.value = scenario.nonGuaranteedValue; deathPayoutEarlyInput.value = scenario.deathPayoutEarly;
+                deathPayoutLateInput.value = scenario.deathPayoutLate; guaranteedPayoutsData = scenario.guaranteedPayoutsData;
+                pruLegacyCheckbox.checked = scenario.pruLegacy; pruWaiverCheckbox.checked = scenario.pruWaiver; parentWaiverCheckbox.checked = scenario.parentWaiver;
                 calculateAndRender();
-                 const message = "Scenario loaded!";
-                 showTemporaryMessage(message);
+                showTemporaryMessage("Scenario loaded!");
             } else {
-                 const message = "No saved scenario found.";
-                 showTemporaryMessage(message);
+                 showTemporaryMessage("No saved scenario found.");
             }
         }
         
-        function renderClientSummary(annualSaving, savingTerm, totalSaving, coveragePeriod, deathPayoutEarly, deathPayoutLate) {
-            const isJuvenile = juvenilePolicyCheckbox.checked;
-            const juvenileLien = [0.4, 0.6, 0.8, 1.0, 1.0];
-
-            let deathPayouts = [];
-            if (isJuvenile) {
-                 deathPayouts.push({ label: 'Death / TPD Payout (Yr 5)', value: formatCurrency(deathPayoutEarly * juvenileLien[4]) });
-                 deathPayouts.push({ label: `Death / TPD Payout (Yr 6+)`, value: formatCurrency(deathPayoutLate) });
-            } else {
-                deathPayouts.push({ label: 'Death / TPD Payout (Yr 1-5)', value: formatCurrency(deathPayoutEarly) });
-                deathPayouts.push({ label: `Death / TPD Payout (Yr 6+)`, value: formatCurrency(deathPayoutLate) });
-            }
-
-             const clientSummary = [
-                { label: 'Annual Saving', value: formatCurrency(annualSaving) },
-                { label: 'Saving Term (years)', value: savingTerm + '' },
-                { label: 'Total Saving', value: formatCurrency(totalSaving) },
-                { label: 'Coverage Period', value: coveragePeriod + '' },
+        function renderClientSummary(annualSaving, savingTerm, totalSaving, coveragePeriod) {
+            const clientSummary = [
+                { label: 'Yearly Saving', value: formatCurrency(annualSaving) },
+                { label: 'Save for (years)', value: savingTerm },
+                { label: 'Maturity/Coverage (years)', value: coveragePeriod },
             ];
-
-            const primarySummaryHTML = clientSummary.map(item => `
+            clientSummaryEl.innerHTML = clientSummary.map(item => `
                 <div class="summary-box">
                     <p class="summary-box-label">${item.label}</p>
                     <p class="summary-box-value">${item.value}</p>
                 </div>
             `).join('');
-            
-            const payoutHTML = deathPayouts.map(item => `
-                <div class="summary-box col-span-2">
-                    <p class="summary-box-label">${item.label}</p>
-                    <p class="summary-box-value">${item.value}</p>
-                </div>
-            `).join('');
-
-            clientSummaryEl.innerHTML = `
-                ${primarySummaryHTML}
-                <div class="md:col-start-1 lg:col-start-5 col-span-2">
-                    ${payoutHTML}
-                </div>
-            `;
         }
 
 
-        function updateTimeline() {
-            const goal = savingsGoalSelect.value;
+        function renderContributionTimeline() {
             const paymentTerm = parseInt(paymentTermInput.value) || 0;
             const policyPeriod = parseInt(policyPeriodInput.value) || 0;
-            const clientAge = parseInt(clientAgeInput.value) || 0;
-            const parentAge = parseInt(parentAgeInput.value) || 0;
-
-            const paymentEndPercent = (paymentTerm / policyPeriod) * 100;
-            
-            document.getElementById('paymentProgressBar').style.width = `${paymentEndPercent}%`;
-            document.getElementById('paymentEndMilestone').style.left = `${paymentEndPercent}%`;
-
-            let startText = `Age ${clientAge}<br>Start`;
-            let paymentEndText = `Age ${clientAge + paymentTerm}<br>Saving Term Ends`;
-            let maturityText = `Age ${clientAge + policyPeriod}<br>Maturity`;
-
-            if (goal === 'education') {
-                startText = `Child Age ${clientAge}<br>Parent Age ${parentAge}`;
-                paymentEndText = `Child Age ${clientAge + paymentTerm}<br>Parent Age ${parentAge + paymentTerm}`;
-                maturityText = `Child Age ${clientAge + policyPeriod}<br>Fund Matures`;
-            }
-
-            document.getElementById('startLabel').innerHTML = startText;
-            document.getElementById('paymentEndLabel').innerHTML = paymentEndText;
-            document.getElementById('maturityLabel').innerHTML = maturityText;
-        }
-
-        function updateProtectionNarrative() {
-            const selectedYear = parseInt(protectionYearSlider.value);
-            protectionYearLabel.textContent = selectedYear;
-
-            const goal = savingsGoalSelect.value;
-            const isJuvenile = juvenilePolicyCheckbox.checked;
             const annualPremium = parseFloat(annualPremiumInput.value) || 0;
-            const paymentTerm = parseInt(paymentTermInput.value) || 0;
-            const deathPayoutEarly = parseFloat(deathPayoutEarlyInput.value) || 0;
-            const deathPayoutLate = parseFloat(deathPayoutLateInput.value) || 0;
-            const juvenileLien = [0.4, 0.6, 0.8, 1.0, 1.0];
+            contributionTimelineContainer.innerHTML = '';
+            if (policyPeriod <= 0) return;
 
-            const totalPremiumsPaidByYear = Math.min(selectedYear, paymentTerm) * annualPremium;
-            const futurePremiums = Math.max(0, paymentTerm - selectedYear) * annualPremium;
+            const saveContainer = document.createElement('div');
+            saveContainer.className = 'timeline-section';
+            const receiveContainer = document.createElement('div');
+            receiveContainer.className = 'timeline-section';
+            const axisWrapper = document.createElement('div');
+            axisWrapper.className = 'timeline-axis-wrapper';
+            axisWrapper.innerHTML = '<div class="timeline-axis"></div>';
+            const yearsContainer = document.createElement('div');
+            yearsContainer.className = 'timeline-years';
             
-            let deathBenefit = 0;
-            if (selectedYear <= 5) {
-                deathBenefit = isJuvenile ? deathPayoutEarly * juvenileLien[selectedYear-1] : deathPayoutEarly;
-            } else {
-                deathBenefit = deathPayoutLate;
+            const maturityFlag = document.createElement('div');
+            maturityFlag.className = 'timeline-maturity-flag';
+            maturityFlag.textContent = 'Maturity';
+
+
+            for (let i = 1; i <= policyPeriod; i++) {
+                const yearEl = document.createElement('div');
+                yearEl.className = 'timeline-year';
+                yearEl.textContent = `Y${i}`;
+                if(i === policyPeriod) {
+                    yearEl.appendChild(maturityFlag);
+                }
+                yearsContainer.appendChild(yearEl);
             }
 
-            const leverage = (totalPremiumsPaidByYear > 0) ? (deathBenefit / totalPremiumsPaidByYear).toFixed(1) : 'N/A';
-            
-            let title = '';
-            let narrativeHTML = '';
-            let icon = '';
-
-            switch (goal) {
-                case 'education':
-                    title = `How Your Child's Goal is Protected`;
-                    icon = 'graduation-cap';
-                    narrativeHTML = `
-                        <p class="text-center font-semibold">Should unforeseen circumstances affect the parent in Year ${selectedYear}:</p>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Total Savings:</span> <strong>${formatCurrency(totalPremiumsPaidByYear)}</strong></div>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Future Savings Waived:</span> <strong>${formatCurrency(futurePremiums)}</strong></div>
-                        <div class="flex justify-between text-sm mt-2 pt-2 border-t"><span class="text-slate-500">Guaranteed Final Payout:</span> <strong class="text-blue-600">${formatCurrency(finalGuaranteedPayout)}</strong></div>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Projected Final Payout:</span> <strong class="text-green-600">${formatCurrency(finalProjectedPayout)}</strong></div>
-                        <p class="text-xs text-center text-slate-500 mt-2">The plan ensures the child's education fund is achieved, providing complete peace of mind.</p>
-                    `;
-                    break;
-                case 'retirement':
-                    title = `How Your Retirement is Safeguarded`;
-                    icon = 'shield-check';
-                     narrativeHTML = `
-                        <p class="text-center font-semibold">Should you be unable to contribute due to disability in Year ${selectedYear}:</p>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Total Savings:</span> <strong>${formatCurrency(totalPremiumsPaidByYear)}</strong></div>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Future Savings Waived:</span> <strong>${formatCurrency(futurePremiums)}</strong></div>
-                        <div class="flex justify-between text-sm mt-2 pt-2 border-t"><span class="text-slate-500">Guaranteed Final Payout:</span> <strong class="text-blue-600">${formatCurrency(finalGuaranteedPayout)}</strong></div>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Projected Final Payout:</span> <strong class="text-green-600">${formatCurrency(finalProjectedPayout)}</strong></div>
-                        <p class="text-xs text-center text-slate-500 mt-2">Your retirement nest egg is secured, even if you can no longer work to contribute.</p>
-                    `;
-                    break;
-                case 'legacy':
-                    title = `How Your Legacy is Guaranteed`;
-                    icon = 'wallet';
-                    narrativeHTML = `
-                        <p class="text-center font-semibold">Should the plan be activated for your nominee in Year ${selectedYear}:</p>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Total Savings:</span> <strong>${formatCurrency(totalPremiumsPaidByYear)}</strong></div>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Immediate Payout to Nominee:</span> <strong class="text-blue-600">${formatCurrency(deathBenefit)}</strong></div>
-                        <div class="flex justify-between text-sm"><span class="text-slate-500">Immediate Leverage:</span> <strong class="text-blue-600">${leverage}x your savings</strong></div>
-                        <p class="text-xs text-center text-slate-500 mt-2">This provides an immediate, significant estate for your loved ones, far exceeding your contributions.</p>
-                    `;
-                    break;
+            if (paymentTerm > 0 && annualPremium > 0) {
+                const saveBar = document.createElement('div');
+                saveBar.className = 'timeline-bar';
+                saveBar.style.width = `calc(${(paymentTerm / policyPeriod) * 100}% - 4px)`;
+                saveBar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2 flex-shrink-0"><path d="M10 5.5c-1.3 1.4-1.3 3.6 0 5"/><path d="M16.5 10.5c0-3-2.5-5.5-5.5-5.5s-5.5 2.5-5.5 5.5c0 2.2 1.3 4 3 4.8V19c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3.7c1.7-.8 3-2.6 3-4.8Z"/><path d="M2 12c0-3.3 2.7-6 6-6"/><path d="M22 12c0-3.3-2.7-6-6-6"/></svg><span>You Save: <strong>${formatCurrency(annualPremium)}/yr</strong></span>`;
+                saveContainer.appendChild(saveBar);
             }
-            protectionTitle.textContent = title;
-            protectionNarrative.innerHTML = `
-                <div class="flex flex-col items-center space-y-4">
-                    <i data-lucide="${icon}" class="w-12 h-12 text-blue-500 animate-in fade-in zoom-in duration-500"></i>
-                    <div class="w-full text-left">
-                        ${narrativeHTML}
-                    </div>
-                </div>
-            `;
-            lucide.createIcons();
+
+            if (guaranteedPayoutsData.length > 0) {
+                let currentBlock = { amount: guaranteedPayoutsData[0], start: 1, end: 1 };
+                for (let i = 1; i < policyPeriod; i++) {
+                    if (guaranteedPayoutsData[i] === currentBlock.amount) {
+                        currentBlock.end = i + 1;
+                    } else {
+                        createReceiveBar(currentBlock, policyPeriod, receiveContainer);
+                        currentBlock = { amount: guaranteedPayoutsData[i], start: i + 1, end: i + 1 };
+                    }
+                }
+                createReceiveBar(currentBlock, policyPeriod, receiveContainer);
+            }
+            
+            contributionTimelineContainer.appendChild(saveContainer);
+            contributionTimelineContainer.appendChild(axisWrapper);
+            contributionTimelineContainer.appendChild(receiveContainer);
+            axisWrapper.appendChild(yearsContainer);
         }
 
-
+        function createReceiveBar(block, policyPeriod, container) {
+            if (block.amount <= 0) return;
+            const receiveBar = document.createElement('div');
+            receiveBar.className = 'timeline-bar receive-bar';
+            const width = `calc(${((block.end - block.start + 1) / policyPeriod) * 100}% - 4px)`;
+            const left = `${((block.start - 1) / policyPeriod) * 100}%`;
+            receiveBar.style.width = width;
+            receiveBar.style.left = left;
+            receiveBar.style.marginRight = '4px';
+            receiveBar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2 flex-shrink-0"><path d="m15 9-6 6"/><path d="M10.5 20.5 3 13"/><path d="M13.5 3.5 21 11"/><path d="M17.5 13.5 19 12l1.5 1.5"/><path d="M12 21.5V16l-2.5 2.5"/><path d="m10.5 3.5-2 2.5 2 2.5"/><path d="M3.5 10.5 5 12l-1.5 1.5"/><path d="M20.5 10.5 18 13l-2-2.5 2-2.5"/></svg><span>Receive: <strong>${formatCurrency(block.amount)}/yr</strong></span>`;
+            container.appendChild(receiveBar);
+        }
+        
         function renderTable(rows) {
             savingsTableBody.innerHTML = '';
-            // Update the interest rate in the table header
+            const interestRate = parseFloat(interestRateInput.value) / 100 || 0;
+            const interestRateHeader = document.getElementById('interestRateHeader');
             interestRateHeader.textContent = (interestRate * 100).toFixed(1);
             if (rows && rows.length > 0) {
                  rows.forEach((row, index) => {
                      const tr = document.createElement('tr');
-                     tr.className = `border-b border-slate-200 table-row-hover ${index % 2 === 1 ? 'bg-gray-50' : ''}`; // Add alternating background color
-                    
+                     tr.className = `border-b border-slate-200 table-row-hover ${index % 2 === 1 ? 'bg-gray-50' : ''}`;
                      const premiumCellContent = row.premiumPaidThisYear > 0 ? formatCurrency(row.premiumPaidThisYear) : '-';
-                    
-                     tr.innerHTML = `
-                         <td class="p-3 text-center w-1/12">${row.year}</td>
-                         <td class="p-3 text-right w-3/12">${premiumCellContent}</td>
-                         <td class="p-3 text-right w-4/12">${formatCurrency(row.annualPayout || 0)}</td>
-                         <td class="p-3 text-right w-4/12">${formatCurrency(row.total || 0)}</td>
-                     `;
+                     tr.innerHTML = `<td class="p-3 text-center w-1/12">${row.year}</td><td class="p-3 text-right w-3/12">${premiumCellContent}</td><td class="p-3 text-right w-4/12">${formatCurrency(row.annualPayout || 0)}</td><td class="p-3 text-right w-4/12">${formatCurrency(row.total || 0)}</td>`;
                      tr.addEventListener('click', () => openEditModal(row.year));
                      tr.addEventListener('mouseover', () => highlightChartPoint(index));
-                     tr.addEventListener('mouseout', () => highlightChartPoint(-1)); // Unhighlight
+                     tr.addEventListener('mouseout', () => highlightChartPoint(-1));
                      savingsTableBody.appendChild(tr);
                  });
             } else {
@@ -1172,286 +958,67 @@
         
         function highlightChartPoint(index) {
             if (lineChartInstance) {
-                // Determine the correct data points to highlight
                 let activeElements = [];
                 if (index !== -1) {
-                    activeElements = [
-                        { datasetIndex: 0, index: index }, // Projected Payout
-                        { datasetIndex: 1, index: index }, // Guaranteed Payout
-                        { datasetIndex: 2, index: index }, // Total Savings
-                        { datasetIndex: 3, index: index },  // Protection Payout
-                    ];
+                    activeElements = [ { datasetIndex: 0, index: index }, { datasetIndex: 1, index: index }, { datasetIndex: 2, index: index }, { datasetIndex: 3, index: index }, ];
                 }
-                // Update the chart to show the new active elements
                 lineChartInstance.setActiveElements(activeElements);
                 lineChartInstance.update();
             }
         }
 
-
-        function renderSummary(totalPremiums, guaranteedPayout, projectedPayout, accumulatedPayout, maturity, nonGuaranteed, paymentTerm, goal, clientAge, parentAge) {
+        function renderSummary(totalPremiums, guaranteedPayout, projectedPayout, accumulatedPayout, maturity, nonGuaranteed, paymentTerm, goal, clientAge) {
             const totalGrowth = projectedPayout - totalPremiums;
             const growthPercentage = totalPremiums > 0 ? (totalGrowth / totalPremiums) * 100 : 0;
-
             totalAccumulatedGuaranteedPayoutEl.textContent = formatCurrency(accumulatedPayout);
             guaranteedMaturityEl.textContent = formatCurrency(maturity);
-            totalGuaranteedPayoutEl.textContent = formatCurrency(guaranteedPayout);
-            guaranteedForEquationEl.textContent = formatCurrency(guaranteedPayout);
             cashValueEl.textContent = formatCurrency(nonGuaranteed);
             totalProjectedPayoutEl.textContent = formatCurrency(projectedPayout);
             totalPremiumsEl.textContent = formatCurrency(totalPremiums);
             totalPremiumsLabel.textContent = `Total Savings (${paymentTerm} years)`;
             totalGrowthEl.innerHTML = `${formatCurrency(totalGrowth)} <span class="text-xl">(${growthPercentage.toFixed(1)}%)</span>`;
-
-            // NEW: Updated goal statement to be dynamic and personalized
             const clientName = clientNameInput.value.trim();
             const clientNameText = clientName ? clientName + "'s" : "Your";
-            let goalText = '';
-            let goalTitle = '';
-
-            switch(goal) {
-                case 'education':
-                    goalTitle = `child's education fund goal:`;
-                    goalText = `Reaching ${formatCurrency(finalProjectedPayout)} by Age ${clientAge + policyPeriod}`;
-                    break;
-                case 'retirement':
-                    goalTitle = `retirement fund goal:`;
-                    goalText = `Reaching ${formatCurrency(finalProjectedPayout)} by Age ${clientAge + policyPeriod}`;
-                    break;
-                case 'legacy':
-                    goalTitle = `legacy fund goal:`;
-                    goalText = `Providing ${formatCurrency(finalProjectedPayout)} to your loved ones`;
-                    break;
-                default:
-                    goalTitle = 'savings goal:';
-                    goalText = 'Please enter values and click "Calculate"';
-            }
-            goalStatementEl.innerHTML = `
-                <p class="text-sm font-medium text-slate-600 mb-1">${clientNameText} ${goalTitle}</p>
-                <p class="text-2xl font-bold text-slate-800">${goalText}</p>
-            `;
-        }
-
-        // New function to render the benefits section with icons
-        function renderBenefitsSection(paymentTerm, policyPeriod, goal) {
-            // This function is no longer needed as the HTML is static, but we'll keep the carousel setup
+            const policyPeriod = parseInt(policyPeriodInput.value) || 0;
+            let goalText = '', goalTitle = '';
+            goalTitle = `Fund Goal:`; 
+            goalText = `Reaching ${formatCurrency(projectedPayout)} by Age ${clientAge + policyPeriod}`;
+            goalStatementEl.innerHTML = `<p class="text-sm font-medium text-slate-600 mb-1">${clientNameText} ${goalTitle}</p><p class="text-2xl font-bold text-slate-800">${goalText}</p>`;
         }
         
         function renderLineChart(growthData) {
-            if (lineChartInstance) {
-                lineChartInstance.destroy();
-            }
-
-            // Dynamically calculate the suggested max for the Y-axis
-            const allValues = [
-                ...growthData.guaranteedPayoutValues,
-                ...growthData.projectedPayoutValues,
-                ...growthData.totalPremiumValues,
-                ...growthData.protectionValues
-            ];
+            if (lineChartInstance) { lineChartInstance.destroy(); }
+            const allValues = [ ...growthData.guaranteedPayoutValues, ...growthData.projectedPayoutValues, ...growthData.totalPremiumValues, ...growthData.protectionValues ];
             const maxVal = Math.max(...allValues);
-            const suggestedMax = maxVal * 1.15; // Add a 15% buffer to the top
-
-            // Create a dedicated dataset for the final label
+            const suggestedMax = maxVal * 1.15;
             const projectedLabelData = Array(growthData.projectedPayoutValues.length).fill(null);
             if (growthData.projectedPayoutValues.length > 0) {
                 projectedLabelData[growthData.projectedPayoutValues.length - 1] = growthData.projectedPayoutValues[growthData.projectedPayoutValues.length - 1];
             }
-
             const data = {
                 labels: growthData.labels,
                 datasets: [
-                    {
-                        label: 'Total Guaranteed Payout',
-                        data: growthData.guaranteedPayoutValues,
-                        borderColor: '#2563eb', // Corporate Blue
-                        backgroundColor: '#2563eb',
-                        fill: false,
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointBackgroundColor: '#2563eb',
-                        order: 0,
-                        yAxisID: 'y',
-                    },
-                    {
-                        label: 'Total Projected Payout',
-                        data: growthData.projectedPayoutValues,
-                        borderColor: '#16a34a', // Green
-                        backgroundColor: '#16a34a',
-                        fill: false,
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointBackgroundColor: '#16a34a',
-                        order: 1,
-                        yAxisID: 'y',
-                    },
-                    {
-                        label: 'Total Savings',
-                        data: growthData.totalPremiumValues,
-                        borderColor: '#a0aec0', // Light Gray
-                        backgroundColor: '#a0aec0',
-                        fill: false,
-                        borderDash: [5, 5],
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointBackgroundColor: '#a0aec0',
-                        order: 2,
-                        yAxisID: 'y',
-                    },
-                    {
-                        label: 'Protection Payout',
-                        data: growthData.protectionValues,
-                        borderColor: '#f43f5e', // Red/Pink for protection
-                        backgroundColor: '#f43f5e',
-                        fill: false,
-                        stepped: true,
-                        order: 3,
-                        yAxisID: 'y',
-                    },
-                    // NEW: Dedicated dataset for the final label
-                    {
-                        label: 'Final Payout',
-                        data: projectedLabelData,
-                        borderColor: 'transparent',
-                        backgroundColor: 'transparent',
-                        pointRadius: 0,
-                        fill: false,
-                        showLine: false,
-                        datalabels: {
-                            color: '#16a34a',
-                            font: {
-                                weight: 'bold',
-                                size: 14
-                            },
-                            formatter: function(value) {
-                                return formatCurrency(value);
-                            }
-                        }
-                    }
+                    { label: 'Total Guaranteed Payout', data: growthData.guaranteedPayoutValues, borderColor: '#2563eb', backgroundColor: '#2563eb', fill: false, tension: 0.1, pointRadius: 3, pointBackgroundColor: '#2563eb', order: 0, yAxisID: 'y' },
+                    { label: 'Total Projected Payout', data: growthData.projectedPayoutValues, borderColor: '#16a34a', backgroundColor: '#16a34a', fill: false, tension: 0.1, pointRadius: 3, pointBackgroundColor: '#16a34a', order: 1, yAxisID: 'y' },
+                    { label: 'Total Savings', data: growthData.totalPremiumValues, borderColor: '#a0aec0', backgroundColor: '#a0aec0', fill: false, borderDash: [5, 5], tension: 0.1, pointRadius: 3, pointBackgroundColor: '#a0aec0', order: 2, yAxisID: 'y' },
+                    { label: 'Protection Payout', data: growthData.protectionValues, borderColor: '#f43f5e', backgroundColor: '#f43f5e', fill: false, stepped: true, order: 3, yAxisID: 'y' },
+                    { label: 'Final Payout', data: projectedLabelData, borderColor: 'transparent', backgroundColor: 'transparent', pointRadius: 0, fill: false, showLine: false, datalabels: { color: '#16a34a', font: { weight: 'bold', size: 14 }, formatter: (value) => formatCurrency(value) }}
                 ]
             };
-
-            lineChartInstance = new Chart(growthChartCanvas, {
-                type: 'line',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    layout: {
-                        padding: {
-                            right: 50 // Add padding to the right
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#334155', boxWidth: 12, padding: 20 }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += formatCurrency(context.parsed.y);
-                                    }
-                                    return label;
-                                },
-                                afterBody: function(context) {
-                                    const annualPayout = growthData.annualPayoutValues[context[0].dataIndex];
-                                    return `Annual Payout: ${formatCurrency(annualPayout)}`;
-                                }
-                            }
-                        },
-                        datalabels: {
-                            // This is the main datalabels configuration for all datasets
-                            align: 'end',
-                            anchor: 'end',
-                            offset: 8,
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                            borderRadius: 4,
-                            padding: 6,
-                            color: '#1e293b',
-                            font: {
-                                weight: 'bold'
-                            },
-                            formatter: function(value, context) {
-                                // Only show labels for specific datasets and points
-                                const data = context.dataset.data;
-                                if (!data || data.length === 0) return null;
-
-                                const isFinalPoint = context.dataIndex === context.dataset.data.length - 1;
-                                
-                                // Show label for the final point on guaranteed and projected lines
-                                const isProjectedOrGuaranteed = context.dataset.label === 'Total Projected Payout' || context.dataset.label === 'Total Guaranteed Payout';
-                                if (isProjectedOrGuaranteed && isFinalPoint) {
-                                     return formatCurrency(value);
-                                }
-
-                                // Show label for the max point on the savings line
-                                if (context.dataset.label === 'Total Savings') {
-                                    const max_value = Math.max(...data);
-                                    const first_max_index = data.indexOf(max_value);
-                                    if (context.dataIndex === first_max_index) {
-                                        return formatCurrency(value);
-                                    }
-                                }
-
-                                return null;
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            beginAtZero: true,
-                            ticks: { color: '#475569', callback: value => formatCurrency(value) },
-                            grid: { color: '#e2e8f0' },
-                            // FIX: Added a suggestedMax to the y-axis to provide top padding
-                            suggestedMax: suggestedMax
-                        },
-                        x: {
-                            ticks: { color: '#475569' },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
+            lineChartInstance = new Chart(growthChartCanvas, { type: 'line', data: data, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, layout: { padding: { right: 50 }}, plugins: { legend: { position: 'bottom', labels: { color: '#334155', boxWidth: 12, padding: 20 }}, tooltip: { callbacks: { label: (context) => { let label = context.dataset.label || ''; if (label) { label += ': '; } if (context.parsed.y !== null) { label += formatCurrency(context.parsed.y); } return label; }, afterBody: (context) => `Annual Payout: ${formatCurrency(growthData.annualPayoutValues[context[0].dataIndex])}` }}, datalabels: { align: 'end', anchor: 'end', offset: 8, backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: 4, padding: 6, color: '#1e293b', font: { weight: 'bold' }, formatter: (value, context) => { const data = context.dataset.data; if (!data || data.length === 0) return null; const isFinalPoint = context.dataIndex === context.dataset.data.length - 1; const isProjectedOrGuaranteed = context.dataset.label === 'Total Projected Payout' || context.dataset.label === 'Total Guaranteed Payout'; if (isProjectedOrGuaranteed && isFinalPoint) { return formatCurrency(value); } if (context.dataset.label === 'Total Savings') { const max_value = Math.max(...data); const first_max_index = data.indexOf(max_value); if (context.dataIndex === first_max_index) { return formatCurrency(value); } } return null; }}}, scales: { y: { type: 'linear', display: true, position: 'left', beginAtZero: true, ticks: { color: '#475569', callback: value => formatCurrency(value) }, grid: { color: '#e2e8f0' }, suggestedMax: suggestedMax }, x: { ticks: { color: '#475569' }, grid: { display: false }}}}});
         }
 
         function switchTab(tab) {
-            tabTableBtn.classList.remove('active');
-            tabChartBtn.classList.remove('active');
-            tabProtectionBtn.classList.remove('active');
-            tableContent.classList.add('hidden');
-            chartContent.classList.add('hidden');
-            protectionContent.classList.add('hidden');
-
-            if (tab === 'chart') {
-                tabChartBtn.classList.add('active');
-                chartContent.classList.remove('hidden');
-            } else if (tab === 'table') {
-                tabTableBtn.classList.add('active');
-                tableContent.classList.remove('hidden');
-            } else if (tab === 'protection') {
-                tabProtectionBtn.classList.add('active');
-                protectionContent.classList.remove('hidden');
-            }
+            tabTableBtn.classList.remove('active'); tabChartBtn.classList.remove('active');
+            tableContent.classList.add('hidden'); chartContent.classList.add('hidden');
+            if (tab === 'chart') { tabChartBtn.classList.add('active'); chartContent.classList.remove('hidden'); }
+            else if (tab === 'table') { tabTableBtn.classList.add('active'); tableContent.classList.remove('hidden'); }
         }
 
         function openEditModal(year) {
             currentlyEditingYear = year;
             modalTitle.textContent = `Edit Year ${year} Guaranteed Payout`;
             modalSavingsInput.value = guaranteedPayoutsData[year - 1];
-            // Removed the percentage input block
             applyToFollowingCheckbox.checked = false;
             editModal.classList.remove('hidden');
         }
@@ -1463,29 +1030,18 @@
 
         function saveChanges() {
             const newGuaranteedPayout = parseFloat(modalSavingsInput.value);
-            // Removed the line that reads the percentage input
-            if (isNaN(newGuaranteedPayout) || currentlyEditingYear === -1) {
-                return;
-            }
-
+            if (isNaN(newGuaranteedPayout) || currentlyEditingYear === -1) return;
             const yearIndex = currentlyEditingYear - 1;
             guaranteedPayoutsData[yearIndex] = newGuaranteedPayout;
-            // Removed the line that updates percentageData
-            const newPercentage = 0; // Keeping this variable defined to prevent errors
-            percentageData[yearIndex] = newPercentage;
-
             if (applyToFollowingCheckbox.checked) {
                 for (let i = yearIndex + 1; i < policyPeriod; i++) {
                     guaranteedPayoutsData[i] = newGuaranteedPayout;
-                    percentageData[i] = newPercentage;
                 }
             }
-
             calculateAndRender();
             closeModal();
         }
         
-        // This is a temporary message box for the user, instead of alert()
         function showTemporaryMessage(message) {
             const messageBox = document.createElement('div');
             messageBox.textContent = message;
@@ -1503,7 +1059,7 @@
                 maximumFractionDigits: 0
             }).format(amount);
         }
-
     </script>
 </body>
 </html>
+
